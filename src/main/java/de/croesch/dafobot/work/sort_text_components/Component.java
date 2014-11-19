@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * TODO Comment here ...
+ * A component (special template) that result in creating a section (generally speaking).
  *
  * @author dafo
  * @since Date: Nov 19, 2014
@@ -16,10 +16,12 @@ public class Component implements ComponentIF {
     this.name = name;
   }
 
+  @Override
   public String getName() {
     return this.name;
   }
 
+  @Override
   public Matcher getMatcher(final String text) {
     return Pattern.compile("\\{\\{" + getName() + "\\}\\}").matcher(text);
   }

@@ -3,30 +3,27 @@ package de.croesch.dafobot.work.visual_verification;
 import java.util.ArrayList;
 
 /**
- * TODO Comment here ???
+ * Provides a really really really simple diff of the change for manual verification.
  * 
- * @author $Author: Christian $
- * @version $Revision: 1.1 $ ($Date: 15.10.2010 11:53:18 $)
+ * @author dafo
+ * @since Date: Oct 15, 2010
  */
 public class Differ {
-  /** Version number. */
-  public static final String VER = "$Revision: 1.1 $";
-
-  public static ArrayList<String> vergleiche(String oldFile, String newFile) {
-    String[] oldLines = oldFile.split("\n");
-    ArrayList<String> diffOldLines = new ArrayList<String>();
-    for (String ln : oldLines) {
+  public static ArrayList<String> vergleiche(final String oldFile, final String newFile) {
+    final String[] oldLines = oldFile.split("\n");
+    final ArrayList<String> diffOldLines = new ArrayList<String>();
+    for (final String ln : oldLines) {
       diffOldLines.add(ln);
     }
 
-    String[] newLines = newFile.split("\n");
-    ArrayList<String> diffNewLines = new ArrayList<String>();
-    for (String ln : newLines) {
+    final String[] newLines = newFile.split("\n");
+    final ArrayList<String> diffNewLines = new ArrayList<String>();
+    for (final String ln : newLines) {
       diffNewLines.add(ln);
     }
 
-    for (String oldLn : oldLines) {
-      for (String newLn : newLines) {
+    for (final String oldLn : oldLines) {
+      for (final String newLn : newLines) {
         if (oldLn.equals(newLn)) {
           diffOldLines.remove(oldLn);
           diffNewLines.remove(newLn);
@@ -34,11 +31,11 @@ public class Differ {
       }
     }
 
-    ArrayList<String> diff = new ArrayList<String>();
-    for (String ln : diffOldLines) {
+    final ArrayList<String> diff = new ArrayList<String>();
+    for (final String ln : diffOldLines) {
       diff.add("old: " + ln + "\n");
     }
-    for (String ln : diffNewLines) {
+    for (final String ln : diffNewLines) {
       diff.add("new: " + ln + "\n");
     }
     return diff;

@@ -4,7 +4,7 @@ import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import de.croesch.dafobot.work.api.EditorIF;
 
 /**
- * TODO Comment here ...
+ * Performs things that should be done in every single edit made by the bot.
  *
  * @author dafo
  * @since Date: Nov 16, 2014

@@ -3,7 +3,7 @@ package de.croesch.dafobot.jwbf.mediawiki.actions.queries;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
 /**
- * TODO Comment here ...
+ * Adapter for {@link net.sourceforge.jwbf.mediawiki.actions.queries.AllPageTitles}.
  *
  * @author dafo
  * @since Date: Nov 16, 2014

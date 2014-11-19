@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * TODO Comment here ...
+ * Special component for the first component not to sort.
  *
  * @author dafo
  * @since Date: Nov 19, 2014

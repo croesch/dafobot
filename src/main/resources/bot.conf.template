@@ -1,0 +1,13 @@
+##########################################
+# Template for bot.conf
+#######################
+#
+# Copy or rename it and enter your
+# settings and credentials.
+##########################################
+
+# the username of the bot
+user.name     = IWasHere
+
+# the password of the bot
+user.password = this-should-be-super-secret-and-safe

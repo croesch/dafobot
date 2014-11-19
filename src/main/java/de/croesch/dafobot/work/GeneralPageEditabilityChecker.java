@@ -6,7 +6,7 @@ import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import de.croesch.dafobot.work.api.PageEditabilityCheckerIF;
 
 /**
- * TODO Comment here ...
+ * Checks editability rules that should apply for every page this bot edits.
  *
  * @author dafo
  * @since Date: Nov 16, 2014

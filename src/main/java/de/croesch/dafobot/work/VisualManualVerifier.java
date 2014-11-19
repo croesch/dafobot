@@ -10,7 +10,7 @@ import de.croesch.dafobot.work.api.VerificationResult;
 import de.croesch.dafobot.work.visual_verification.VerificationFrame;
 
 /**
- * TODO Comment here ...
+ * {@link ChangeVerifierIF} for manual verification of a change.
  *
  * @author dafo
  * @since Date: Nov 16, 2014

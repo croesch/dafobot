@@ -10,7 +10,7 @@ import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import de.croesch.dafobot.work.GeneralEditor;
 
 /**
- * TODO Comment here ...
+ * Sorts text components.
  *
  * @author dafo
  * @since Date: Nov 16, 2014

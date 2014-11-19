@@ -13,7 +13,8 @@ import de.croesch.dafobot.work.api.PagePoolIF;
 import de.croesch.dafobot.work.api.VerificationResult;
 
 /**
- * TODO Comment here ...
+ * The assembled <em>logic</em> of the bot. It receives the main parts of the bot and manages the interaction and order
+ * of execution.
  *
  * @author dafo
  * @since Date: Nov 16, 2014

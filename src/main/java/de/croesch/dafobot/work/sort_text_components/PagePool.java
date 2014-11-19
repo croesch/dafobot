@@ -5,7 +5,7 @@ import de.croesch.dafobot.jwbf.mediawiki.actions.queries.AllPageTitles;
 import de.croesch.dafobot.work.api.PagePoolIF;
 
 /**
- * TODO Comment here ...
+ * All pages in the default namespace.
  *
  * @author dafo
  * @since Date: Nov 16, 2014

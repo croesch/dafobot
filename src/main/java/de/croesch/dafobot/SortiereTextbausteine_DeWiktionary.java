@@ -19,7 +19,7 @@ import de.croesch.dafobot.work.sort_text_components.PageEditabilityChecker;
 import de.croesch.dafobot.work.sort_text_components.PagePool;
 
 /**
- * TODO Comment here ...
+ * Main class for sorting of the text components.
  *
  * @author dafo
  * @since Date: Nov 16, 2014

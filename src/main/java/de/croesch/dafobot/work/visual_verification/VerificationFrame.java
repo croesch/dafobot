@@ -32,17 +32,14 @@ import org.slf4j.LoggerFactory;
 import de.croesch.dafobot.work.api.VerificationResult;
 
 /**
- * TODO Comment here ???
+ * Frame for manual verification.
  * 
- * @author $Author: Christian $
- * @version $Revision: 1.1 $ ($Date: 15.10.2010 22:23:16 $)
+ * @author dafo
+ * @since Date: Oct 15, 2010
  */
 public class VerificationFrame extends JFrame {
-  /** TODO Comment here */
+  /** generated serial version UID. */
   private static final long serialVersionUID = 6640164611324700043L;
-
-  /** Version number. */
-  public static final String VER = "$Revision: 1.1 $";
 
   private static final Logger LOG = LoggerFactory.getLogger(VerificationFrame.class);
 

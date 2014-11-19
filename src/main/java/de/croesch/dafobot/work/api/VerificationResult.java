@@ -1,7 +1,7 @@
 package de.croesch.dafobot.work.api;
 
 /**
- * TODO Comment here ...
+ * Verification result of a change.
  *
  * @author dafo
  * @since Date: Nov 16, 2014
