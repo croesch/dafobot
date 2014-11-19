@@ -12,4 +12,16 @@
 hs_err_pid*
 
 # Dumps of wikis
-/dumps/
+/dumps
+
+# Eclipse files
+.classpath
+.project
+.settings/
+
+# maven
+/target/
+
+# sensitive configuration - better safe than sorry
+*.conf
+bot.conf
