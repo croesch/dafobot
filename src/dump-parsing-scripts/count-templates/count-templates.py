@@ -21,6 +21,7 @@ args = parser.parse_args()
 # parse the dump
 ns = "{http://www.mediawiki.org/xml/export-0.9/}"
 i = 0
+j = 0
 result = []
 for event, elem in ET.iterparse(args.file, events=('start', 'end')):
   if event == 'end' and elem.tag == ns+'page' :
@@ -35,12 +36,17 @@ for event, elem in ET.iterparse(args.file, events=('start', 'end')):
         count = 0
       else:
         count = text.count("{{")
+      j += 1
       if count > 500:
         result.append([count, elem.find(ns+'title').text.encode('utf-8')])
         i += 1
         if args.max > 0 and i >= args.max:
           break
+      print "\r",
+      print "{:<10} pages{:>10} hits".format(j, i),
+      sys.stdout.flush()
     elem.clear()
+print ""
 
 # sort the result
 result.sort(reverse=True)
