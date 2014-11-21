@@ -14,6 +14,7 @@ parser = argparse.ArgumentParser(description='Counts template usage in dump file
 parser.add_argument('-c', '--creds', type=argparse.FileType('r'), help='the credentials file', required=True)
 parser.add_argument('-f', '--file', type=getIt, help='the dump file', required=True)
 parser.add_argument('--max', type=int, default=-1, help='Max number of results.')
+parser.add_argument('--dry-run', action='store_true')
 
 args = parser.parse_args()
 
@@ -53,6 +54,10 @@ for line in result:
   # [[Ewige Tabelle der UEFA Europa League]] <small>([http://de.wikipedia.org/w/index.php?title=Ewige_Tabelle_der_UEFA_Europa_League&action=edit edit])</small>
   pagetext += " {:<10} [[{}]] <small>([http://de.wikipedia.org/w/index.php?title={}&action=edit edit])</small>".format(count, title, titleInLink) + "\n"
 pagetext = pagetext[:-1]
+
+if args.dry_run:
+  print "Dry run -> exiting"
+  sys.exit(0)
 
 # Load credentials
 p = javaproperties.Properties()
