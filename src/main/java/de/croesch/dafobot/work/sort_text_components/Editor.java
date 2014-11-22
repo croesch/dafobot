@@ -86,7 +86,7 @@ public class Editor extends GeneralEditor {
     final String textWithoutEnd = whereEnd.isEmpty() ? text : text.substring(0, beginEnd);
     final List<Occurrence> whereComponents = findComponents(textWithoutEnd, COMPONENTS, new ArrayList<ComponentIF>());
 
-    if (whereComponents.isEmpty()) {
+    if (areAlreadyOrderedCorrectly(whereComponents)) {
       // nothing to sort
       throw new NoEditNeededException();
     }
@@ -105,6 +105,20 @@ public class Editor extends GeneralEditor {
 
     LOG.info("End editing " + title);
     return sb.toString();
+  }
+
+  private boolean areAlreadyOrderedCorrectly(final List<Occurrence> occurrences) {
+    if (occurrences.isEmpty()) {
+      return true;
+    }
+    int lastStart = -1;
+    for (final Occurrence occurrence : occurrences) {
+      if (occurrence.where().getFrom() < lastStart) {
+        return false;
+      }
+      lastStart = occurrence.where().getFrom();
+    }
+    return true;
   }
 
   private List<Occurrence> findComponents(final String text,
