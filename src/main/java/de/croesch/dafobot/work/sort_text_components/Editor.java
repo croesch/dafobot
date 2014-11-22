@@ -99,7 +99,7 @@ public class Editor extends GeneralEditor {
         sb.append(textWithoutEnd.substring(occurrence.where().getFrom(), occurrence.where().getTo()));
       }
     }
-    if (whereEnd.isEmpty()) {
+    if (!whereEnd.isEmpty()) {
       sb.append(text.substring(beginEnd));
     }
 
