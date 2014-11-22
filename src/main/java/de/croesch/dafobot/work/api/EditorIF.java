@@ -10,5 +10,5 @@ import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
  */
 public interface EditorIF {
 
-  void edit(SimpleArticle article);
+  void edit(SimpleArticle article) throws NoEditNeededException;
 }

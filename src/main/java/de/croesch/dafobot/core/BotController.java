@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import de.croesch.dafobot.work.api.ChangeVerifierIF;
 import de.croesch.dafobot.work.api.EditorIF;
+import de.croesch.dafobot.work.api.NoEditNeededException;
 import de.croesch.dafobot.work.api.PageEditabilityCheckerIF;
 import de.croesch.dafobot.work.api.PagePoolIF;
 import de.croesch.dafobot.work.api.VerificationResult;
@@ -59,21 +60,25 @@ public class BotController {
     final SimpleArticle article = this.bot.readData(next);
     final SimpleArticle oldArticle = new SimpleArticle(article);
     if (this.editabilityChecker.canEdit(article)) {
-      LOG.debug("can edit.");
-      this.editor.edit(article);
-      LOG.debug("edited.");
-      final VerificationResult result = this.verifier.verify(oldArticle, article);
-      LOG.debug("verified: " + result);
-      switch (result) {
-        case GOOD:
-          this.bot.writeContent(article);
-          break;
-        case FATAL:
-          LOG.error("FATAL error during editing " + next);
-          return false;
-        case BAD:
-          LOG.info("bad edit for " + next);
-          break;
+      try {
+        LOG.debug("can edit.");
+        this.editor.edit(article);
+        LOG.debug("edited.");
+        final VerificationResult result = this.verifier.verify(oldArticle, article);
+        LOG.debug("verified: " + result);
+        switch (result) {
+          case GOOD:
+            this.bot.writeContent(article);
+            break;
+          case FATAL:
+            LOG.error("FATAL error during editing " + next);
+            return false;
+          case BAD:
+            LOG.info("bad edit for " + next);
+            break;
+        }
+      } catch (final NoEditNeededException e) {
+        LOG.info("no edit needed for '" + article.getTitle() + "'");
       }
     } else {
       LOG.warn("Cannot edit " + next);

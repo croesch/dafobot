@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.croesch.dafobot.work.GeneralEditor;
+import de.croesch.dafobot.work.api.NoEditNeededException;
 
 /**
  * Sorts text components.
@@ -75,7 +76,7 @@ public class Editor extends GeneralEditor {
                                                  new Component("Ähnlichkeiten") };
 
   @Override
-  protected String doSpecialEdit(final String title, final String text) {
+  protected String doSpecialEdit(final String title, final String text) throws NoEditNeededException {
     LOG.info("Begin editing " + title);
 
     final StringBuilder sb = new StringBuilder();
@@ -84,6 +85,11 @@ public class Editor extends GeneralEditor {
 
     final String textWithoutEnd = whereEnd.isEmpty() ? text : text.substring(0, beginEnd);
     final List<Occurrence> whereComponents = findComponents(textWithoutEnd, COMPONENTS, new ArrayList<ComponentIF>());
+
+    if (whereComponents.isEmpty()) {
+      // nothing to sort
+      throw new NoEditNeededException();
+    }
 
     sb.append(begin(textWithoutEnd, whereComponents));
     for (final Occurrence occurrence : whereComponents) {

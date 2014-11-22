@@ -2,6 +2,7 @@ package de.croesch.dafobot.work;
 
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import de.croesch.dafobot.work.api.EditorIF;
+import de.croesch.dafobot.work.api.NoEditNeededException;
 
 /**
  * Performs things that should be done in every single edit made by the bot.
@@ -12,7 +13,7 @@ import de.croesch.dafobot.work.api.EditorIF;
 public abstract class GeneralEditor implements EditorIF {
 
   @Override
-  public final void edit(final SimpleArticle article) {
+  public final void edit(final SimpleArticle article) throws NoEditNeededException {
     article.setMinorEdit(false);
     article.setEditSummary("Bot: " + getEditSummary());
     article.setText(doSpecialEdit(article.getTitle(), article.getText()));
@@ -20,5 +21,5 @@ public abstract class GeneralEditor implements EditorIF {
 
   protected abstract String getEditSummary();
 
-  protected abstract String doSpecialEdit(String title, String text);
+  protected abstract String doSpecialEdit(String title, String text) throws NoEditNeededException;
 }
