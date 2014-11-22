@@ -27,6 +27,7 @@ public class Editor extends GeneralEditor {
                                              new Component("Anmerkung(\\s+|\\|)Steigerung"),
                                              new Component("Artikel\\s+Nachname"),
                                              new Component("Artikel\\s+Toponym"),
+                                             new Component("Steigerbarkeit Adjektiv"),
                                              new Component("Anmerkung"),
                                              new Component("Anmerkung\\|zum Genus"),
                                              new Component("Alternative\\s+Schreibweisen"),
