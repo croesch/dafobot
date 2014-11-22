@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,6 +81,36 @@ public class Editor extends GeneralEditor {
     LOG.info("Begin editing " + title);
 
     final StringBuilder sb = new StringBuilder();
+    final Matcher matcher = Pattern.compile("\n==[^=]").matcher(text);
+
+    int lastStart = 0;
+    boolean found;
+    boolean editNeeded = false;
+    do {
+      found = matcher.find();
+      String partText = text.substring(lastStart, found ? matcher.start() : text.length());
+      if (found) {
+        lastStart = matcher.start();
+      }
+      try {
+        partText = editPart(partText);
+        editNeeded = true;
+      } catch (final NoEditNeededException e) {
+        // ignore
+      }
+      sb.append(partText);
+    } while (found);
+
+    if (!editNeeded) {
+      throw new NoEditNeededException();
+    }
+
+    LOG.info("End editing " + title);
+    return sb.toString();
+  }
+
+  private String editPart(final String text) throws NoEditNeededException {
+    final StringBuilder sb = new StringBuilder();
     final List<Occurrence> whereEnd = findComponents(text, END_COMPONENTS, new ArrayList<ComponentIF>());
     final int beginEnd = min(whereEnd);
 
@@ -103,7 +134,6 @@ public class Editor extends GeneralEditor {
       sb.append(text.substring(beginEnd));
     }
 
-    LOG.info("End editing " + title);
     return sb.toString();
   }
 
