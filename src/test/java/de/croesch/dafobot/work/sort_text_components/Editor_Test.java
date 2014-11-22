@@ -10,6 +10,7 @@ import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
+import de.croesch.dafobot.core.Text;
 import de.croesch.dafobot.work.api.NoEditNeededException;
 
 /**
@@ -24,8 +25,8 @@ public class Editor_Test extends Editor_TestCase {
   public void should_Edit_Page_So_That_Result_Equals_Result_File() throws IOException {
     final List<Path> testFiles = allPathFiles("/sort_text_components/beforeafter/");
     for (final Path path : testFiles) {
-      final String result = new Editor().doSpecialEdit(path.toString(), stringOf(path));
-      assertThat(result).as(path.toString()).isEqualTo(stringOf(afterPath(path)));
+      final Text result = new Editor().doSpecialEdit(path.toString(), textOf(path));
+      assertThat(result.toPlainString()).as(path.toString()).isEqualTo(textOf(afterPath(path)).toPlainString());
     }
     System.out.println("SUCCES testing " + testFiles.size() + " test files.");
   }
@@ -35,7 +36,7 @@ public class Editor_Test extends Editor_TestCase {
     final List<Path> testFiles = allPathFiles("/sort_text_components/noeditneeded/");
     for (final Path path : testFiles) {
       try {
-        new Editor().doSpecialEdit(path.toString(), stringOf(path));
+        new Editor().doSpecialEdit(path.toString(), textOf(path));
         Assertions.fail("Didn't throw exception for: " + path.toString());
       } catch (final NoEditNeededException exception) {
         // good!

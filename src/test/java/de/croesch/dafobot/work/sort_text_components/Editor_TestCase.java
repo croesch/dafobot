@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import de.croesch.dafobot.core.Text;
+
 /**
  * TODO Comment here ...
  *
@@ -18,8 +20,8 @@ import java.util.List;
  */
 public class Editor_TestCase {
 
-  protected String stringOf(final Path path) throws IOException {
-    return new String(Files.readAllBytes(path));
+  protected Text textOf(final Path path) throws IOException {
+    return new Text(new String(Files.readAllBytes(path)));
   }
 
   protected List<Path> allPathFiles(final String folder) throws IOException {

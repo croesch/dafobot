@@ -1,6 +1,7 @@
 package de.croesch.dafobot.work;
 
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
+import de.croesch.dafobot.core.Text;
 import de.croesch.dafobot.work.api.EditorIF;
 import de.croesch.dafobot.work.api.NoEditNeededException;
 
@@ -16,10 +17,11 @@ public abstract class GeneralEditor implements EditorIF {
   public final void edit(final SimpleArticle article) throws NoEditNeededException {
     article.setMinorEdit(false);
     article.setEditSummary("Bot: " + getEditSummary());
-    article.setText(doSpecialEdit(article.getTitle(), article.getText()));
+    final Text text = new Text(article.getText());
+    article.setText(doSpecialEdit(article.getTitle(), text).toPlainString());
   }
 
   protected abstract String getEditSummary();
 
-  protected abstract String doSpecialEdit(String title, String text) throws NoEditNeededException;
+  protected abstract Text doSpecialEdit(String title, Text text) throws NoEditNeededException;
 }

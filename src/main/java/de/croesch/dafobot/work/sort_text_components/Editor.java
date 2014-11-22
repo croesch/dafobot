@@ -11,6 +11,8 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.croesch.dafobot.core.Text;
+import de.croesch.dafobot.core.TextBuilder;
 import de.croesch.dafobot.work.GeneralEditor;
 import de.croesch.dafobot.work.api.NoEditNeededException;
 
@@ -25,32 +27,32 @@ public class Editor extends GeneralEditor {
 
   private static ComponentIF[] COMPONENTS = { new Component("Lesungen"),
                                              new Component("Anmerkung(\\s+|\\|)Steigerung"),
-                                             new Component("Artikel\\s+Nachname"),
-                                             new Component("Artikel\\s+Toponym"),
-                                             new Component("Steigerbarkeit Adjektiv"),
+                                             new Component("Artikel", "Nachname"),
+                                             new Component("Artikel", "Toponym"),
+                                             new Component("Steigerbarkeit", "Adjektiv"),
                                              new Component("Anmerkung"),
                                              new Component("Anmerkung\\|zum Genus"),
-                                             new Component("Alternative\\s+Schreibweisen"),
-                                             new Component("Veraltete\\s+Schreibweisen"),
+                                             new Component("Alternative", "Schreibweisen"),
+                                             new Component("Veraltete", "Schreibweisen"),
                                              new Component("Nebenformen"),
                                              new Component("Worttrennung"),
-                                             new Component("in arabischer Schrift"),
-                                             new Component("in kyrillischer Schrift"),
-                                             new Component("in lateinischer Schrift"),
+                                             new Component("in", "arabischer", "Schrift"),
+                                             new Component("in", "kyrillischer", "Schrift"),
+                                             new Component("in", "lateinischer", "Schrift"),
                                              new Component("Strichreihenfolge"),
                                              new Component("Vokalisierung"),
                                              new Component("Umschrift"),
                                              new Component("Aussprache"),
-                                             new Component("Grammatische Merkmale"),
+                                             new Component("Grammatische", "Merkmale"),
                                              new Component("Bedeutungen"),
                                              new Component("Abkürzungen"),
                                              new Component("Symbole"),
                                              new Component("Herkunft"),
                                              new Component("Synonyme"),
-                                             new Component("Sinnverwandte (Wörter|Zeichen|Redewendungen)"),
+                                             new Component("Sinnverwandte", "(Wörter|Zeichen|Redewendungen)"),
                                              new Component("Gegenwörter"),
-                                             new Component("Weibliche Wortformen"),
-                                             new Component("Männliche Wortformen"),
+                                             new Component("Weibliche", "Wortformen"),
+                                             new Component("Männliche", "Wortformen"),
                                              new Component("Verkleinerungsformen"),
                                              new Component("Vergrößerungsformen"),
                                              new Component("Oberbegriffe"),
@@ -58,13 +60,13 @@ public class Editor extends GeneralEditor {
                                              new Component("Kurzformen"),
                                              new Component("Koseformen"),
                                              new Component("Namensvarianten"),
-                                             new Component("Weibliche Namensvarianten"),
-                                             new Component("Männliche Namensvarianten"),
-                                             new Component("Bekannte Namensträger"),
+                                             new Component("Weibliche", "Namensvarianten"),
+                                             new Component("Männliche", "Namensvarianten"),
+                                             new Component("Bekannte", "Namensträger"),
                                              new Component("Beispiele"),
                                              new Component("Redewendungen"),
                                              new Component("Sprichwörter"),
-                                             new Component("Charakteristische Wortkombinationen"),
+                                             new Component("Charakteristische", "Wortkombinationen"),
                                              new Component("Wortbildungen"),
                                              new Component("Entlehnungen") };
 
@@ -78,18 +80,18 @@ public class Editor extends GeneralEditor {
                                                  new Component("Ähnlichkeiten") };
 
   @Override
-  protected String doSpecialEdit(final String title, final String text) throws NoEditNeededException {
+  protected Text doSpecialEdit(final String title, final Text text) throws NoEditNeededException {
     LOG.info("Begin editing " + title);
 
-    final StringBuilder sb = new StringBuilder();
-    final Matcher matcher = Pattern.compile("\n==[^=]").matcher(text);
+    final TextBuilder tb = new TextBuilder();
+    final Matcher matcher = Pattern.compile("\n==[^=]").matcher(text.toString());
 
     int lastStart = 0;
     boolean found;
     boolean editNeeded = false;
     do {
       found = matcher.find();
-      String partText = text.substring(lastStart, found ? matcher.start() : text.length());
+      Text partText = text.substring(lastStart, found ? matcher.start() : text.length());
       if (found) {
         lastStart = matcher.start();
       }
@@ -99,7 +101,7 @@ public class Editor extends GeneralEditor {
       } catch (final NoEditNeededException e) {
         // ignore
       }
-      sb.append(partText);
+      tb.append(partText);
     } while (found);
 
     if (!editNeeded) {
@@ -107,15 +109,15 @@ public class Editor extends GeneralEditor {
     }
 
     LOG.info("End editing " + title);
-    return sb.toString();
+    return tb.toText();
   }
 
-  private String editPart(final String text) throws NoEditNeededException {
-    final StringBuilder sb = new StringBuilder();
+  private Text editPart(final Text text) throws NoEditNeededException {
+    final TextBuilder tb = new TextBuilder();
     final List<Occurrence> whereEnd = findComponents(text, END_COMPONENTS, new ArrayList<ComponentIF>());
     final int beginEnd = min(whereEnd);
 
-    final String textWithoutEnd = whereEnd.isEmpty() ? text : text.substring(0, beginEnd);
+    final Text textWithoutEnd = whereEnd.isEmpty() ? text : text.substring(0, beginEnd);
     final List<Occurrence> whereComponents = findComponents(textWithoutEnd, COMPONENTS, new ArrayList<ComponentIF>());
 
     if (areAlreadyOrderedCorrectly(whereComponents)) {
@@ -123,19 +125,19 @@ public class Editor extends GeneralEditor {
       throw new NoEditNeededException();
     }
 
-    sb.append(begin(textWithoutEnd, whereComponents));
+    tb.append(begin(textWithoutEnd, whereComponents));
     for (final Occurrence occurrence : whereComponents) {
       if (occurrence.where().getTo() < 0) {
-        sb.append(textWithoutEnd.substring(occurrence.where().getFrom()));
+        tb.append(textWithoutEnd.substring(occurrence.where().getFrom()));
       } else {
-        sb.append(textWithoutEnd.substring(occurrence.where().getFrom(), occurrence.where().getTo()));
+        tb.append(textWithoutEnd.substring(occurrence.where().getFrom(), occurrence.where().getTo()));
       }
     }
     if (!whereEnd.isEmpty()) {
-      sb.append(text.substring(beginEnd));
+      tb.append(text.substring(beginEnd));
     }
 
-    return sb.toString();
+    return tb.toText();
   }
 
   private boolean areAlreadyOrderedCorrectly(final List<Occurrence> occurrences) {
@@ -152,13 +154,13 @@ public class Editor extends GeneralEditor {
     return true;
   }
 
-  private List<Occurrence> findComponents(final String text,
+  private List<Occurrence> findComponents(final Text text,
                                           final ComponentIF[] components,
                                           final List<ComponentIF> duplicates) {
     final List<Occurrence> occurrences = new ArrayList<>();
 
     for (final ComponentIF component : components) {
-      final Matcher matcher = component.getMatcher(text);
+      final Matcher matcher = component.getMatcher(text.toString());
       final boolean found = matcher.find();
       if (found) {
         occurrences.add(new Occurrence(component, new Range(matcher.start())));
@@ -190,7 +192,7 @@ public class Editor extends GeneralEditor {
     }
   }
 
-  private String begin(final String text, final List<Occurrence> where) {
+  private Text begin(final Text text, final List<Occurrence> where) {
     final int min = min(where);
     return text.substring(0, min);
   }
