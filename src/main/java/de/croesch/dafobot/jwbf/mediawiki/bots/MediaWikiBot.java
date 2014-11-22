@@ -31,6 +31,6 @@ public class MediaWikiBot extends net.sourceforge.jwbf.mediawiki.bots.MediaWikiB
 
   @Override
   public final synchronized void writeContent(final SimpleArticle simpleArticle) {
-    // ignore
+    super.writeContent(simpleArticle);
   }
 }
