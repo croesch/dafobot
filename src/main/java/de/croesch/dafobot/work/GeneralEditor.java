@@ -15,10 +15,10 @@ public abstract class GeneralEditor implements EditorIF {
   public final void edit(final SimpleArticle article) {
     article.setMinorEdit(false);
     article.setEditSummary("Bot: " + getEditSummary());
-    doSpecialEdit(article);
+    article.setText(doSpecialEdit(article.getTitle(), article.getText()));
   }
 
   protected abstract String getEditSummary();
 
-  protected abstract void doSpecialEdit(final SimpleArticle article);
+  protected abstract String doSpecialEdit(String title, String text);
 }

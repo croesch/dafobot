@@ -1,12 +1,15 @@
 package de.croesch.dafobot.work.sort_text_components;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
-import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.croesch.dafobot.work.GeneralEditor;
 
 /**
@@ -16,6 +19,7 @@ import de.croesch.dafobot.work.GeneralEditor;
  * @since Date: Nov 16, 2014
  */
 public class Editor extends GeneralEditor {
+  private static final Logger LOG = LoggerFactory.getLogger(Editor.class);
 
   private static ComponentIF[] COMPONENTS = { new Component("Lesungen"),
                                              new Component("Anmerkung(\\s+|\\|)Steigerung"),
@@ -71,57 +75,79 @@ public class Editor extends GeneralEditor {
                                                  new Component("Ähnlichkeiten") };
 
   @Override
-  protected void doSpecialEdit(final SimpleArticle article) {
+  protected String doSpecialEdit(final String title, final String text) {
+    LOG.info("Begin editing " + title);
+
     final StringBuilder sb = new StringBuilder();
-    final Map<Integer, ComponentIF> whereEnd = findComponents(article.getText(), END_COMPONENTS,
-                                                              new ArrayList<ComponentIF>());
+    final List<Occurrence> whereEnd = findComponents(text, END_COMPONENTS, new ArrayList<ComponentIF>());
     final int beginEnd = min(whereEnd);
 
-    final String textWithoutEnd = article.getText().substring(0, beginEnd);
-    final Map<Integer, ComponentIF> whereComponents = findComponents(textWithoutEnd, COMPONENTS,
-                                                                     new ArrayList<ComponentIF>());
-    sb.append("============").append("\n");
-    sb.append(" BEGIN").append("\n");
-    sb.append("============").append("\n");
+    final String textWithoutEnd = whereEnd.isEmpty() ? text : text.substring(0, beginEnd);
+    final List<Occurrence> whereComponents = findComponents(textWithoutEnd, COMPONENTS, new ArrayList<ComponentIF>());
+
     sb.append(begin(textWithoutEnd, whereComponents));
+    for (final Occurrence occurrence : whereComponents) {
+      if (occurrence.where().getTo() < 0) {
+        sb.append(textWithoutEnd.substring(occurrence.where().getFrom()));
+      } else {
+        sb.append(textWithoutEnd.substring(occurrence.where().getFrom(), occurrence.where().getTo()));
+      }
+    }
+    if (whereEnd.isEmpty()) {
+      sb.append(text.substring(beginEnd));
+    }
 
-    sb.append("============").append("\n");
-    sb.append(" END").append("\n");
-    sb.append("============").append("\n");
-    sb.append(article.getText().substring(beginEnd));
-
-    article.setText(sb.toString());
+    LOG.info("End editing " + title);
+    return sb.toString();
   }
 
-  private Map<Integer, ComponentIF> findComponents(final String text,
-                                                   final ComponentIF[] components,
-                                                   final List<ComponentIF> duplicates) {
-    final Map<Integer, ComponentIF> where = new HashMap<Integer, ComponentIF>();
+  private List<Occurrence> findComponents(final String text,
+                                          final ComponentIF[] components,
+                                          final List<ComponentIF> duplicates) {
+    final List<Occurrence> occurrences = new ArrayList<>();
 
     for (final ComponentIF component : components) {
       final Matcher matcher = component.getMatcher(text);
       final boolean found = matcher.find();
       if (found) {
-        where.put(matcher.start(), component);
+        occurrences.add(new Occurrence(component, new Range(matcher.start())));
         if (matcher.find()) {
           duplicates.add(component);
         }
       }
-
-      //      sb.append(component.getName()).append(": ").append(found).append("\n");
     }
-    return where;
+
+    fillRange(occurrences);
+    return occurrences;
   }
 
-  private String begin(final String text, final Map<Integer, ComponentIF> where) {
+  private void fillRange(final List<Occurrence> occurrences) {
+    final int[] starts = new int[occurrences.size()];
+    for (int i = 0; i < occurrences.size(); ++i) {
+      starts[i] = occurrences.get(i).where().getFrom();
+    }
+    Arrays.sort(starts);
+    final Map<Integer, Integer> ends = new HashMap<>();
+    for (int i = 0; i < starts.length - 1; ++i) {
+      ends.put(starts[i], starts[i + 1]);
+    }
+
+    for (int i = 0; i < occurrences.size(); ++i) {
+      if (ends.containsKey(occurrences.get(i).where().getFrom())) {
+        occurrences.get(i).where().setTo(ends.get(occurrences.get(i).where().getFrom()));
+      }
+    }
+  }
+
+  private String begin(final String text, final List<Occurrence> where) {
     final int min = min(where);
     return text.substring(0, min);
   }
 
-  private int min(final Map<Integer, ComponentIF> where) {
+  private int min(final List<Occurrence> where) {
     int min = Integer.MAX_VALUE;
-    for (final Integer value : where.keySet()) {
-      min = Math.min(min, value);
+    for (final Occurrence value : where) {
+      min = Math.min(min, value.where().getFrom());
     }
     return min;
   }
