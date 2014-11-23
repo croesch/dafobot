@@ -237,6 +237,6 @@ public class Editor extends GeneralEditor {
 
   @Override
   protected String getEditSummary() {
-    return "Sortiere Textbausteine";
+    return "Sortiere Textbausteine nach [[Hilfe:Formatvorlage]] ([[Benutzer:DafoBot/Sortierung der Textbausteine|Informationen]] | [[Benutzer Diskussion:DafoBot/Sortierung der Textbausteine|Diskussion]])";
   }
 }
