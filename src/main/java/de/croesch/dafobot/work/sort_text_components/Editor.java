@@ -19,6 +19,7 @@ import de.croesch.dafobot.work.api.PageNeedsQAException;
 import de.croesch.dafobot.work.sort_text_components.comp.AvailableIfOtherComponentExists;
 import de.croesch.dafobot.work.sort_text_components.comp.Component;
 import de.croesch.dafobot.work.sort_text_components.comp.ComponentIF;
+import de.croesch.dafobot.work.sort_text_components.comp.MultiComponent;
 import de.croesch.dafobot.work.sort_text_components.comp.NotAvailableIfOtherComponentExists;
 import de.croesch.dafobot.work.sort_text_components.comp.PseudoComp_Uebersetzungen;
 
@@ -39,7 +40,7 @@ public class Editor extends GeneralEditor {
                                              new Component("Artikel", "Toponym"),
                                              new Component("Steigerbarkeit", "Adjektiv"),
                                              new Component("Anmerkung(en)?"),
-                                             new Component("Anmerkung(en)?", "|", "[^}]*"),
+                                             new MultiComponent("Anmerkung(en)?", "|", "[^}]*"),
                                              new NotAvailableIfOtherComponentExists(CONDITION_NAME_ARTICLE,
                                                                                     new String[] { "Alternative",
                                                                                                   "Schreibweisen" }),
@@ -188,7 +189,11 @@ public class Editor extends GeneralEditor {
         final boolean found = matcher.find();
         if (found) {
           occurrences.add(new Occurrence(component, new Range(matcher.start())));
-          if (matcher.find()) {
+          if (component.isAllowedMultipleTimes()) {
+            while (matcher.find()) {
+              occurrences.add(new Occurrence(component, new Range(matcher.start())));
+            }
+          } else if (matcher.find()) {
             duplicates.add(component);
           }
         }

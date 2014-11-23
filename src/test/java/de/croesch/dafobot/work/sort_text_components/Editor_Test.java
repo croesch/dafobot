@@ -63,6 +63,18 @@ public class Editor_Test extends Editor_TestCase {
     compare(BEFORE_AFTER_DIR + "simple2");
   }
 
+  @Test
+  public void should_Accept_Duplicate_Anmerkungen_And_Insert_It_In_Original_Order_1() throws IOException,
+                                                                                     URISyntaxException {
+    compare(BEFORE_AFTER_DIR + "duplicate-anmerkung-1");
+  }
+
+  @Test
+  public void should_Accept_Duplicate_Anmerkungen_And_Insert_It_In_Original_Order_2() throws IOException,
+                                                                                     URISyntaxException {
+    compare(BEFORE_AFTER_DIR + "duplicate-anmerkung-2");
+  }
+
   @Test(expected = NoEditNeededException.class)
   public void should_Throw_NoEditNeededException_If_No_Components_Available() throws IOException, URISyntaxException {
     edit(NO_EDIT_NEEDED_DIR + "no-components");

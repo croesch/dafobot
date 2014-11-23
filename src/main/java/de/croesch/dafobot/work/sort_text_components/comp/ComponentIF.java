@@ -18,4 +18,7 @@ public interface ComponentIF {
 
   /** @return {@link Matcher} for finding this component inside the given text. */
   Matcher getMatcher(String text);
+
+  /** @return <code>true</code> if this component is allowed to appear multiple times. */
+  boolean isAllowedMultipleTimes();
 }

@@ -57,4 +57,9 @@ abstract class AComponent implements ComponentIF {
   public boolean availableFor(final String text) {
     return true;
   }
+
+  @Override
+  public boolean isAllowedMultipleTimes() {
+    return false;
+  }
 }
