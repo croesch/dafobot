@@ -62,9 +62,4 @@ abstract class AComponent implements ComponentIF {
   public boolean isAllowedMultipleTimes() {
     return false;
   }
-
-  @Override
-  public boolean isNecessary(final String text) {
-    return false;
-  }
 }

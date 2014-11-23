@@ -21,7 +21,4 @@ public interface ComponentIF {
 
   /** @return <code>true</code> if this component is allowed to appear multiple times. */
   boolean isAllowedMultipleTimes();
-
-  /** @return <code>true</code> if this component <em>must</em> be in the text. */
-  boolean isNecessary(String text);
 }

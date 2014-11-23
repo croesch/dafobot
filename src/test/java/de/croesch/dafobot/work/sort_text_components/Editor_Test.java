@@ -75,21 +75,6 @@ public class Editor_Test extends Editor_TestCase {
     compare(BEFORE_AFTER_DIR + "duplicate-anmerkung-2");
   }
 
-  @Test
-  public void should_Insert_QS_Herkunft_If_Absent() throws IOException, URISyntaxException {
-    compare(BEFORE_AFTER_DIR + "no-herkunft");
-  }
-
-  @Test
-  public void should_Insert_QS_Herkunft_If_Absent_Even_If_Order_Is_Correct() throws IOException, URISyntaxException {
-    compare(BEFORE_AFTER_DIR + "no-herkunft-but-correct-order");
-  }
-
-  @Test
-  public void should_Not_Insert_QS_Herkunft_If_It_Already_Exists() throws IOException, URISyntaxException {
-    compare(BEFORE_AFTER_DIR + "no-herkunft-but-qs-herkunft");
-  }
-
   @Test(expected = NoEditNeededException.class)
   public void should_Throw_NoEditNeededException_If_No_Components_Available() throws IOException, URISyntaxException {
     edit(NO_EDIT_NEEDED_DIR + "no-components");
@@ -121,7 +106,7 @@ public class Editor_Test extends Editor_TestCase {
 
   private Text edit(final String resource) throws URISyntaxException, NoEditNeededException, IOException {
     final Path path = pathOfClasspath(resource + ".before");
-    return new Editor().doSpecialEdit(path.toString(), textOf(path)).getText();
+    return new Editor().doSpecialEdit(path.toString(), textOf(path));
   }
 
   private Path pathOfClasspath(final String resource) throws URISyntaxException {
