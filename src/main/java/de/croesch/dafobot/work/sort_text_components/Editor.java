@@ -28,6 +28,8 @@ import de.croesch.dafobot.work.sort_text_components.comp.PseudoComp_Uebersetzung
  * @since Date: Nov 16, 2014
  */
 public class Editor extends GeneralEditor {
+  private static final String[] CONDITION_NAME_ARTICLE = new String[] { "Wortart", "\\|", "(Vor|Nach)name" };
+
   private static final Logger LOG = LoggerFactory.getLogger(Editor.class);
 
   private static ComponentIF[] COMPONENTS = { new Component("Lesungen"),
@@ -37,9 +39,7 @@ public class Editor extends GeneralEditor {
                                              new Component("Steigerbarkeit", "Adjektiv"),
                                              new Component("Anmerkung"),
                                              new Component("Anmerkung\\|zum Genus"),
-                                             new NotAvailableIfOtherComponentExists(new String[] { "Wortart",
-                                                                                                  "\\|",
-                                                                                                  "(Vor|Nach)name" },
+                                             new NotAvailableIfOtherComponentExists(CONDITION_NAME_ARTICLE,
                                                                                     new String[] { "Alternative",
                                                                                                   "Schreibweisen" }),
                                              new Component("Veraltete", "Schreibweisen"),
@@ -68,14 +68,17 @@ public class Editor extends GeneralEditor {
                                              new Component("Unterbegriffe"),
                                              new Component("Kurzformen"),
                                              new Component("Koseformen"),
-                                             new AvailableIfOtherComponentExists(new String[] { "Wortart",
-                                                                                               "\\|",
-                                                                                               "(Vor|Nach)name" },
+                                             new AvailableIfOtherComponentExists(CONDITION_NAME_ARTICLE,
                                                                                  new String[] { "Alternative",
                                                                                                "Schreibweisen" }),
                                              new Component("Namensvarianten"),
-                                             new Component("Weibliche", "Namensvarianten"),
+                                             new NotAvailableIfOtherComponentExists(CONDITION_NAME_ARTICLE,
+                                                                                    new String[] { "Weibliche",
+                                                                                                  "Namensvarianten" }),
                                              new Component("Männliche", "Namensvarianten"),
+                                             new AvailableIfOtherComponentExists(CONDITION_NAME_ARTICLE,
+                                                                                 new String[] { "Weibliche",
+                                                                                               "Namensvarianten" }),
                                              new Component("Bekannte", "Namensträger"),
                                              new Component("Beispiele"),
                                              new Component("Redewendungen"),
