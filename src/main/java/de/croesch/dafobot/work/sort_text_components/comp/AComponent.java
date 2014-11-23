@@ -21,11 +21,18 @@ abstract class AComponent implements ComponentIF {
     final StringBuilder n = new StringBuilder();
     for (int i = 0; i < nameParts.length; ++i) {
       final String part = nameParts[i];
+      if (part.equals("|")) {
+        np.append("\\");
+      }
       np.append(part);
       n.append(part);
       if (i + 1 < nameParts.length) {
-        np.append(WHITESPACE_NECESSARY_PATTERN);
-        n.append(" ");
+        if (nameParts[i + 1].equals("|") || nameParts[i].equals("|")) {
+          np.append(WHITESPACE_POSSIBLE_PATTERN);
+        } else {
+          np.append(WHITESPACE_NECESSARY_PATTERN);
+          n.append(" ");
+        }
       }
     }
     this.name = n.toString();

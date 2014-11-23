@@ -33,12 +33,12 @@ public class Editor extends GeneralEditor {
   private static final Logger LOG = LoggerFactory.getLogger(Editor.class);
 
   private static ComponentIF[] COMPONENTS = { new Component("Lesungen"),
-                                             new Component("Anmerkung(\\s+|\\|)Steigerung"),
+                                             new Component("Anmerkung", "Steigerung"),
                                              new Component("Artikel", "Nachname"),
                                              new Component("Artikel", "Toponym"),
                                              new Component("Steigerbarkeit", "Adjektiv"),
-                                             new Component("Anmerkung"),
-                                             new Component("Anmerkung\\|zum Genus"),
+                                             new Component("Anmerkung(en)?"),
+                                             new Component("Anmerkung(en)?", "|", "[^}]*"),
                                              new NotAvailableIfOtherComponentExists(CONDITION_NAME_ARTICLE,
                                                                                     new String[] { "Alternative",
                                                                                                   "Schreibweisen" }),
