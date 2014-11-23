@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.croesch.dafobot.core.EditedText;
 import de.croesch.dafobot.core.Text;
 import de.croesch.dafobot.core.TextBuilder;
 import de.croesch.dafobot.work.GeneralEditor;
@@ -20,6 +21,7 @@ import de.croesch.dafobot.work.sort_text_components.comp.AvailableIfOtherCompone
 import de.croesch.dafobot.work.sort_text_components.comp.Component;
 import de.croesch.dafobot.work.sort_text_components.comp.ComponentIF;
 import de.croesch.dafobot.work.sort_text_components.comp.MultiComponent;
+import de.croesch.dafobot.work.sort_text_components.comp.NecessaryComponent;
 import de.croesch.dafobot.work.sort_text_components.comp.NotAvailableIfOtherComponentExists;
 import de.croesch.dafobot.work.sort_text_components.comp.PseudoComp_Uebersetzungen;
 
@@ -58,7 +60,13 @@ public class Editor extends GeneralEditor {
                                              new Component("Bedeutungen"),
                                              new Component("Abkürzungen"),
                                              new Component("Symbole"),
-                                             new Component("QS", "Herkunft", "|", "fehlt"),
+                                             new NecessaryComponent("{{QS Herkunft|fehlt}}\n\n",
+                                                                    "QS-Herkunft",
+                                                                    new Component("Herkunft"),
+                                                                    "QS",
+                                                                    "Herkunft",
+                                                                    "|",
+                                                                    "fehlt"),
                                              new Component("Herkunft"),
                                              new Component("Synonyme"),
                                              new Component("Sinnverwandte", "(Wörter|Zeichen|Redewendungen)"),
@@ -100,10 +108,12 @@ public class Editor extends GeneralEditor {
                                                  new Component("Ähnlichkeiten") };
 
   @Override
-  protected Text doSpecialEdit(final String title, final Text text) throws NoEditNeededException, PageNeedsQAException {
+  protected EditedText doSpecialEdit(final String title, final Text text) throws NoEditNeededException,
+                                                                         PageNeedsQAException {
     LOG.info("Begin editing " + title);
 
     final TextBuilder tb = new TextBuilder();
+    String commentAppendum = "";
     final Matcher matcher = Pattern.compile("\n==[^=]").matcher(text.toString());
 
     int lastStart = 0;
@@ -116,7 +126,9 @@ public class Editor extends GeneralEditor {
         lastStart = matcher.start();
       }
       try {
-        partText = editPart(partText);
+        final EditedText editedText = editPart(partText);
+        partText = editedText.getText();
+        commentAppendum += editedText.getCommentAppendum();
         editNeeded = true;
       } catch (final NoEditNeededException e) {
         // ignore
@@ -129,16 +141,20 @@ public class Editor extends GeneralEditor {
     }
 
     LOG.info("End editing " + title);
-    return tb.toText();
+    return new EditedText(tb.toText(), commentAppendum);
   }
 
-  private Text editPart(final Text text) throws NoEditNeededException, PageNeedsQAException {
+  private EditedText editPart(final Text text) throws NoEditNeededException, PageNeedsQAException {
     final TextBuilder tb = new TextBuilder();
+    String appendum = "";
     final List<Occurrence> whereEnd = findComponents(text, END_COMPONENTS, new ArrayList<ComponentIF>());
     final int beginEnd = min(whereEnd);
 
-    final Text textWithoutEnd = whereEnd.isEmpty() ? text : text.substring(0, beginEnd);
+    Text textWithoutEnd = whereEnd.isEmpty() ? text : text.substring(0, beginEnd);
     final ArrayList<ComponentIF> duplicateComponents = new ArrayList<ComponentIF>();
+    final EditedText insertedText = insertNecessaryComponents(textWithoutEnd, COMPONENTS);
+    textWithoutEnd = insertedText.getText();
+    appendum += insertedText.getCommentAppendum();
     final List<Occurrence> whereComponents = findComponents(textWithoutEnd, COMPONENTS, duplicateComponents);
 
     if (!duplicateComponents.isEmpty()) {
@@ -161,7 +177,21 @@ public class Editor extends GeneralEditor {
       tb.append(text.substring(beginEnd));
     }
 
-    return tb.toText();
+    return new EditedText(tb.toText(), appendum);
+  }
+
+  private EditedText insertNecessaryComponents(final Text textWithoutEnd, final ComponentIF[] components) {
+    String commentAppendum = "";
+    Text changedText = textWithoutEnd;
+    for (final ComponentIF component : components) {
+      if (component.isNecessary(changedText.toString())) {
+        if (!component.getMatcher(changedText.toString()).find()) {
+          changedText = new Text(changedText.toPlainString() + ((NecessaryComponent) component).getNiceVariant());
+          commentAppendum += ", +" + ((NecessaryComponent) component).getCommentAddition();
+        }
+      }
+    }
+    return new EditedText(changedText, commentAppendum);
   }
 
   private boolean areAlreadyOrderedCorrectly(final List<Occurrence> occurrences) {
