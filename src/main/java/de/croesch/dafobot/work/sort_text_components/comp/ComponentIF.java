@@ -1,4 +1,4 @@
-package de.croesch.dafobot.work.sort_text_components;
+package de.croesch.dafobot.work.sort_text_components.comp;
 
 import java.util.regex.Matcher;
 
@@ -12,6 +12,9 @@ public interface ComponentIF {
 
   /** @return the printable name of that component. */
   String getName();
+
+  /** @return <code>true</code> if this component is allowed inside the given text. */
+  boolean availableFor(String text);
 
   /** @return {@link Matcher} for finding this component inside the given text. */
   Matcher getMatcher(String text);

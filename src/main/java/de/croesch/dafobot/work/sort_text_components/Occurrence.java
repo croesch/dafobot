@@ -1,5 +1,7 @@
 package de.croesch.dafobot.work.sort_text_components;
 
+import de.croesch.dafobot.work.sort_text_components.comp.ComponentIF;
+
 /**
  * Represents a specific occurrence of a component in a text.
  *

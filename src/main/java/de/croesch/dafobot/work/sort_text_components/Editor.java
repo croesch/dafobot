@@ -15,6 +15,11 @@ import de.croesch.dafobot.core.Text;
 import de.croesch.dafobot.core.TextBuilder;
 import de.croesch.dafobot.work.GeneralEditor;
 import de.croesch.dafobot.work.api.NoEditNeededException;
+import de.croesch.dafobot.work.sort_text_components.comp.AvailableIfOtherComponentExists;
+import de.croesch.dafobot.work.sort_text_components.comp.Component;
+import de.croesch.dafobot.work.sort_text_components.comp.ComponentIF;
+import de.croesch.dafobot.work.sort_text_components.comp.NotAvailableIfOtherComponentExists;
+import de.croesch.dafobot.work.sort_text_components.comp.PseudoComp_Uebersetzungen;
 
 /**
  * Sorts text components.
@@ -32,7 +37,11 @@ public class Editor extends GeneralEditor {
                                              new Component("Steigerbarkeit", "Adjektiv"),
                                              new Component("Anmerkung"),
                                              new Component("Anmerkung\\|zum Genus"),
-                                             new Component("Alternative", "Schreibweisen"),
+                                             new NotAvailableIfOtherComponentExists(new String[] { "Wortart",
+                                                                                                  "\\|",
+                                                                                                  "(Vor|Nach)name" },
+                                                                                    new String[] { "Alternative",
+                                                                                                  "Schreibweisen" }),
                                              new Component("Veraltete", "Schreibweisen"),
                                              new Component("Nebenformen"),
                                              new Component("Worttrennung"),
@@ -59,6 +68,11 @@ public class Editor extends GeneralEditor {
                                              new Component("Unterbegriffe"),
                                              new Component("Kurzformen"),
                                              new Component("Koseformen"),
+                                             new AvailableIfOtherComponentExists(new String[] { "Wortart",
+                                                                                               "\\|",
+                                                                                               "(Vor|Nach)name" },
+                                                                                 new String[] { "Alternative",
+                                                                                               "Schreibweisen" }),
                                              new Component("Namensvarianten"),
                                              new Component("Weibliche", "Namensvarianten"),
                                              new Component("Männliche", "Namensvarianten"),
@@ -160,12 +174,14 @@ public class Editor extends GeneralEditor {
     final List<Occurrence> occurrences = new ArrayList<>();
 
     for (final ComponentIF component : components) {
-      final Matcher matcher = component.getMatcher(text.toString());
-      final boolean found = matcher.find();
-      if (found) {
-        occurrences.add(new Occurrence(component, new Range(matcher.start())));
-        if (matcher.find()) {
-          duplicates.add(component);
+      if (component.availableFor(text.toString())) {
+        final Matcher matcher = component.getMatcher(text.toString());
+        final boolean found = matcher.find();
+        if (found) {
+          occurrences.add(new Occurrence(component, new Range(matcher.start())));
+          if (matcher.find()) {
+            duplicates.add(component);
+          }
         }
       }
     }
