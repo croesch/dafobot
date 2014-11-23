@@ -1,6 +1,10 @@
 package de.croesch.dafobot;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Properties;
 
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
@@ -28,15 +32,25 @@ public class SortiereTextbausteine_DeWiktionary {
   private static final Logger LOG = LoggerFactory.getLogger(SortiereTextbausteine_DeWiktionary.class);
 
   public static void main(final String[] args) throws IOException {
-    LOG.debug("starting.");
-    final MediaWikiBot bot = new WiktionaryDeBot();
-    final PagePoolIF pages = new PagePool(bot);
-    final PageEditabilityCheckerIF editabilityChecker = new PageEditabilityChecker();
-    final EditorIF editor = new Editor();
-    final ChangeVerifierIF verifier = new VisualManualVerifier();
+    final Properties configuration = new Properties();
+    configuration.load(MediaWikiBot.class.getResourceAsStream("/bot.conf"));
 
-    final BotController controller = new BotController(bot, pages, editabilityChecker, editor, verifier);
-    controller.run();
+    try (final Connection connection = DriverManager.getConnection(configuration.getProperty("db.url"),
+                                                                   configuration.getProperty("db.user"),
+                                                                   configuration.getProperty("db.password"));) {
+      LOG.debug("starting.");
+      final MediaWikiBot bot = new WiktionaryDeBot(configuration);
+      final PagePoolIF pages = new PagePool(bot, connection);
+      final PageEditabilityCheckerIF editabilityChecker = new PageEditabilityChecker();
+      final EditorIF editor = new Editor();
+      final ChangeVerifierIF verifier = new VisualManualVerifier();
+
+      final BotController controller = new BotController(bot, connection, pages, editabilityChecker, editor, verifier);
+      controller.run();
+    } catch (final SQLException e) {
+      LOG.error(e.getMessage());
+    }
+
     LOG.info("finished.");
   }
 }

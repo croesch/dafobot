@@ -1,5 +1,9 @@
 package de.croesch.dafobot.core;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 
@@ -34,12 +38,16 @@ public class BotController {
 
   private final ChangeVerifierIF verifier;
 
+  private final Connection connection;
+
   public BotController(final MediaWikiBot bot,
+                       final Connection connection,
                        final PagePoolIF pages,
                        final PageEditabilityCheckerIF editabilityChecker,
                        final EditorIF editor,
                        final ChangeVerifierIF verifier) {
     this.bot = bot;
+    this.connection = connection;
     this.pages = pages;
     this.editabilityChecker = editabilityChecker;
     this.editor = editor;
@@ -60,6 +68,7 @@ public class BotController {
 
     final SimpleArticle article = this.bot.readData(next);
     final SimpleArticle oldArticle = new SimpleArticle(article);
+    insertArticle(article.getTitle(), false);
     if (this.editabilityChecker.canEdit(article)) {
       try {
         LOG.debug("can edit.");
@@ -70,6 +79,7 @@ public class BotController {
         switch (result) {
           case GOOD:
             this.bot.writeContent(article);
+            insertArticle(article.getTitle(), true);
             break;
           case FATAL:
             LOG.error("FATAL error during editing " + next);
@@ -80,12 +90,45 @@ public class BotController {
         }
       } catch (final NoEditNeededException e) {
         LOG.info("no edit needed for '" + article.getTitle() + "'");
+        insertProblematicArticle(article.getTitle(), null, false);
       } catch (final PageNeedsQAException e) {
         LOG.warn("QA needed for '" + article.getTitle() + "' (" + e.getMessage() + ")");
+        insertProblematicArticle(article.getTitle(), e.getMessage(), true);
       }
     } else {
       LOG.warn("Cannot edit " + next);
     }
     return true;
+  }
+
+  private void insertProblematicArticle(final String title, final String reason, final boolean corrupt) {
+    final String statementString = "INSERT INTO `no_edit_pages` SET page=?, reason=?, corrupt=?";
+
+    try (final PreparedStatement statement = this.connection.prepareStatement(statementString);) {
+      statement.setString(1, title);
+      statement.setString(2, reason);
+      statement.setBoolean(3, corrupt);
+      statement.executeUpdate();
+    } catch (final SQLException e) {
+      e.printStackTrace();
+      LOG.error(e.getMessage());
+    }
+  }
+
+  private void insertArticle(final String title, final boolean edit) {
+    String statementString;
+    if (edit) {
+      statementString = "INSERT INTO `pages` SET page=?,lastedit=now() ON DUPLICATE KEY UPDATE lastedit=now()";
+    } else {
+      statementString = "INSERT INTO `pages` SET page=? ON DUPLICATE KEY UPDATE lastchecked=now()";
+    }
+
+    try (final PreparedStatement statement = this.connection.prepareStatement(statementString);) {
+      statement.setString(1, title);
+      statement.executeUpdate();
+    } catch (final SQLException e) {
+      e.printStackTrace();
+      LOG.error(e.getMessage());
+    }
   }
 }

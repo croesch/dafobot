@@ -6,8 +6,21 @@
 # settings and credentials.
 ##########################################
 
+# wiki
+##########################################
 # the username of the bot
 user.name     = IWasHere
 
 # the password of the bot
 user.password = this-should-be-super-secret-and-safe
+
+# database
+##########################################
+# the url to the database
+db.url        = ...
+
+# the username for the bot in the database
+db.user       = IWasAlsoHere
+
+# the password of the bot in the database
+db.password   = this-should-also-be-secret
