@@ -5,6 +5,9 @@ import java.util.Properties;
 
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Adapter for {@link net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot}.
  *
@@ -12,6 +15,10 @@ import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
  * @since Date: Nov 16, 2014
  */
 public class MediaWikiBot extends net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot {
+  private static final Logger LOG = LoggerFactory.getLogger(MediaWikiBot.class);
+
+  private long lastWrite = -1;
+
   /**
    * Creates the bot and automatically logs it in with the credentials found in <code>bot.conf</code>.
    *
@@ -30,6 +37,16 @@ public class MediaWikiBot extends net.sourceforge.jwbf.mediawiki.bots.MediaWikiB
 
   @Override
   public final synchronized void writeContent(final SimpleArticle simpleArticle) {
+    final long sleepTime = this.lastWrite + 12000 - System.currentTimeMillis();
+    if (sleepTime > 0) {
+      LOG.info("Sleeping for " + sleepTime + " ms");
+      try {
+        Thread.sleep(sleepTime);
+      } catch (final InterruptedException e) {
+        LOG.warn(e.getMessage());
+      }
+    }
     super.writeContent(simpleArticle);
+    this.lastWrite = System.currentTimeMillis();
   }
 }
