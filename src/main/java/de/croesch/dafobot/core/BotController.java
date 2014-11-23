@@ -10,6 +10,7 @@ import de.croesch.dafobot.work.api.ChangeVerifierIF;
 import de.croesch.dafobot.work.api.EditorIF;
 import de.croesch.dafobot.work.api.NoEditNeededException;
 import de.croesch.dafobot.work.api.PageEditabilityCheckerIF;
+import de.croesch.dafobot.work.api.PageNeedsQAException;
 import de.croesch.dafobot.work.api.PagePoolIF;
 import de.croesch.dafobot.work.api.VerificationResult;
 
@@ -79,6 +80,8 @@ public class BotController {
         }
       } catch (final NoEditNeededException e) {
         LOG.info("no edit needed for '" + article.getTitle() + "'");
+      } catch (final PageNeedsQAException e) {
+        LOG.warn("QA needed for '" + article.getTitle() + "' (" + e.getMessage() + ")");
       }
     } else {
       LOG.warn("Cannot edit " + next);

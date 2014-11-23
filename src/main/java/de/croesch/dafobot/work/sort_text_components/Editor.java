@@ -15,6 +15,7 @@ import de.croesch.dafobot.core.Text;
 import de.croesch.dafobot.core.TextBuilder;
 import de.croesch.dafobot.work.GeneralEditor;
 import de.croesch.dafobot.work.api.NoEditNeededException;
+import de.croesch.dafobot.work.api.PageNeedsQAException;
 import de.croesch.dafobot.work.sort_text_components.comp.AvailableIfOtherComponentExists;
 import de.croesch.dafobot.work.sort_text_components.comp.Component;
 import de.croesch.dafobot.work.sort_text_components.comp.ComponentIF;
@@ -98,7 +99,7 @@ public class Editor extends GeneralEditor {
                                                  new Component("Ähnlichkeiten") };
 
   @Override
-  protected Text doSpecialEdit(final String title, final Text text) throws NoEditNeededException {
+  protected Text doSpecialEdit(final String title, final Text text) throws NoEditNeededException, PageNeedsQAException {
     LOG.info("Begin editing " + title);
 
     final TextBuilder tb = new TextBuilder();
@@ -130,14 +131,18 @@ public class Editor extends GeneralEditor {
     return tb.toText();
   }
 
-  private Text editPart(final Text text) throws NoEditNeededException {
+  private Text editPart(final Text text) throws NoEditNeededException, PageNeedsQAException {
     final TextBuilder tb = new TextBuilder();
     final List<Occurrence> whereEnd = findComponents(text, END_COMPONENTS, new ArrayList<ComponentIF>());
     final int beginEnd = min(whereEnd);
 
     final Text textWithoutEnd = whereEnd.isEmpty() ? text : text.substring(0, beginEnd);
-    final List<Occurrence> whereComponents = findComponents(textWithoutEnd, COMPONENTS, new ArrayList<ComponentIF>());
+    final ArrayList<ComponentIF> duplicateComponents = new ArrayList<ComponentIF>();
+    final List<Occurrence> whereComponents = findComponents(textWithoutEnd, COMPONENTS, duplicateComponents);
 
+    if (!duplicateComponents.isEmpty()) {
+      throw new PageNeedsQAException("duplicate components " + duplicateComponents);
+    }
     if (areAlreadyOrderedCorrectly(whereComponents)) {
       // nothing to sort
       throw new NoEditNeededException();

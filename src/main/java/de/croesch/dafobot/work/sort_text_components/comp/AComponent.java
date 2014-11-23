@@ -44,6 +44,11 @@ abstract class AComponent implements ComponentIF {
     return this.name;
   }
 
+  @Override
+  public String toString() {
+    return getName();
+  }
+
   protected String getNamePattern() {
     return this.namePattern;
   }

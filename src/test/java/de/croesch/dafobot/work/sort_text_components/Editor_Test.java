@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import de.croesch.dafobot.core.Text;
 import de.croesch.dafobot.work.api.NoEditNeededException;
+import de.croesch.dafobot.work.api.PageNeedsQAException;
 
 /**
  * Provides black box tests for {@link Editor}.
@@ -24,6 +25,8 @@ public class Editor_Test extends Editor_TestCase {
   private static final String BEFORE_AFTER_DIR = "/sort_text_components/beforeafter/";
 
   private static final String NO_EDIT_NEEDED_DIR = "/sort_text_components/noeditneeded/";
+
+  private static final String QA_NEEDED_DIR = "/sort_text_components/qaneeded/";
 
   @Test
   public void should_Order_Vorname_Article_Correctly() throws IOException, URISyntaxException {
@@ -69,6 +72,18 @@ public class Editor_Test extends Editor_TestCase {
   public void should_Throw_NoEditNeededException_If_Components_Are_Already_Ordered_Correctly() throws IOException,
                                                                                               URISyntaxException {
     edit(NO_EDIT_NEEDED_DIR + "correct-order");
+  }
+
+  @Test(expected = PageNeedsQAException.class)
+  public void should_Throw_PageNeedsQAException_If_Component_Comes_Twice_Consecutive() throws IOException,
+                                                                                      URISyntaxException {
+    edit(QA_NEEDED_DIR + "duplicate-component-1");
+  }
+
+  @Test(expected = PageNeedsQAException.class)
+  public void should_Throw_PageNeedsQAException_If_Components_Exists_Twice_At_Different_Positions() throws IOException,
+                                                                                                   URISyntaxException {
+    edit(QA_NEEDED_DIR + "duplicate-component-2");
   }
 
   private void compare(final String resource) throws IOException, URISyntaxException {
