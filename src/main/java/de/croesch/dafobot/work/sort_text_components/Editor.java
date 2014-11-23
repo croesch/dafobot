@@ -56,6 +56,7 @@ public class Editor extends GeneralEditor {
                                              new Component("Bedeutungen"),
                                              new Component("Abkürzungen"),
                                              new Component("Symbole"),
+                                             new Component("QS", "Herkunft", "|", "fehlt"),
                                              new Component("Herkunft"),
                                              new Component("Synonyme"),
                                              new Component("Sinnverwandte", "(Wörter|Zeichen|Redewendungen)"),
