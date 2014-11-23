@@ -4,15 +4,19 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * TODO Comment here ...
+ * A custom string-like data container. It's used because wiki-texts can contain comments everywhere which makes parsing
+ * really hard. To avoid deletion of those comments (even if on a wrong place) and synchronisation between cleaned and
+ * original source, this contains the full text but returns only the commentless text.
  *
  * @author dafo
  * @since Date: Nov 22, 2014
  */
 public class Text {
 
+  /** the full (with comments) content. */
   private final String content;
 
+  /** lazy initialised character array of the full content. */
   private char[] chars;
 
   public Text(final String t) {
@@ -21,6 +25,7 @@ public class Text {
 
   @Override
   public String toString() {
+    /* Build the content for parsing (aka remove the effing comments). Use own construct because regex is too greedy. */
     final StringBuilder sb = new StringBuilder();
     final Matcher openMatcher = Pattern.compile("<!--").matcher(this.content);
     final Matcher closeMatcher = Pattern.compile("-->").matcher(this.content);
