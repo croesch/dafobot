@@ -22,6 +22,6 @@ public class TextBuilder {
     for (final Text text : this.texts) {
       sb.append(text.toPlainString());
     }
-    return new Text(sb.toString());
+    return new Text(sb.toString().replaceAll("\n\n+", "\n\n"));
   }
 }

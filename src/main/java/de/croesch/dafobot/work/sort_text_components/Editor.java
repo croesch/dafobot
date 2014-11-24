@@ -38,6 +38,10 @@ public class Editor extends GeneralEditor {
 
   private static final Component MALE = new Component("m");
 
+  private static final Component EMPTY1 = new Component("----");
+
+  private static final Component EMPTY2 = new Component("2x----");
+
   private static final Component MALE_OLD_VARIANT = new Component("Männliche", "Wortformen");
 
   private static final Component FEMALE_OLD_VARIANT = new Component("Weibliche", "Wortformen");
@@ -147,6 +151,7 @@ public class Editor extends GeneralEditor {
 
     Text textWithoutEnd = whereEnd.isEmpty() ? text : text.substring(0, beginEnd);
     textWithoutEnd = replaceOldNameVariants(textWithoutEnd, additionalActions);
+    textWithoutEnd = removeEmptyTemplates(textWithoutEnd, additionalActions);
     final ArrayList<ComponentIF> duplicateComponents = new ArrayList<ComponentIF>();
     final List<Occurrence> whereComponents = findComponents(textWithoutEnd, COMPONENTS, duplicateComponents);
 
@@ -171,6 +176,28 @@ public class Editor extends GeneralEditor {
     }
 
     return tb.toText();
+  }
+
+  private Text removeEmptyTemplates(Text text, final Collection<String> additionalActions) {
+    final Matcher emptyMatcher1 = EMPTY1.getMatcher(text.toString());
+    if (emptyMatcher1.find()) {
+      additionalActions.add("Entferne {{----}}");
+      text = new Text(text.substring(0, emptyMatcher1.start()).toPlainString()
+                      + removePrecedingWhiteSpaces(text.substring(emptyMatcher1.end()).toPlainString()));
+    }
+
+    final Matcher emptyMatcher2 = EMPTY2.getMatcher(text.toString());
+    if (emptyMatcher2.find()) {
+      additionalActions.add("Entferne {{2x----}}");
+      text = new Text(text.substring(0, emptyMatcher2.start()).toPlainString()
+                      + removePrecedingWhiteSpaces(text.substring(emptyMatcher2.end()).toPlainString()));
+    }
+
+    return text;
+  }
+
+  private String removePrecedingWhiteSpaces(final String plainString) {
+    return plainString.replaceFirst("^\\s+", "");
   }
 
   private Text replaceOldNameVariants(Text text, final Collection<String> additionalActions) {
