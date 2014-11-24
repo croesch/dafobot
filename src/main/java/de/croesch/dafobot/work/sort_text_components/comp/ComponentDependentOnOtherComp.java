@@ -1,7 +1,5 @@
 package de.croesch.dafobot.work.sort_text_components.comp;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * <p>
@@ -25,12 +23,7 @@ public abstract class ComponentDependentOnOtherComp extends Component {
 
   public ComponentDependentOnOtherComp(final String[] conditionParts, final String[] component) {
     super(component);
-    this.condition = new AComponent(conditionParts) {
-      @Override
-      public Matcher getMatcher(final String text) {
-        return Pattern.compile("\\{\\{" + WHITESPACE_POSSIBLE_PATTERN + getNamePattern()).matcher(text);
-      }
-    };
+    this.condition = new BeginningTemplate(conditionParts);
   }
 
   @Override

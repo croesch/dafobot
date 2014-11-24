@@ -17,6 +17,7 @@ import de.croesch.dafobot.work.GeneralEditor;
 import de.croesch.dafobot.work.api.NoEditNeededException;
 import de.croesch.dafobot.work.api.PageNeedsQAException;
 import de.croesch.dafobot.work.sort_text_components.comp.AvailableIfOtherComponentExists;
+import de.croesch.dafobot.work.sort_text_components.comp.BeginningTemplate;
 import de.croesch.dafobot.work.sort_text_components.comp.Component;
 import de.croesch.dafobot.work.sort_text_components.comp.ComponentIF;
 import de.croesch.dafobot.work.sort_text_components.comp.MultiComponent;
@@ -30,7 +31,15 @@ import de.croesch.dafobot.work.sort_text_components.comp.PseudoComp_Uebersetzung
  * @since Date: Nov 16, 2014
  */
 public class Editor extends GeneralEditor {
-  private static final String[] CONDITION_NAME_ARTICLE = new String[] { "Wortart", "\\|", "(Vor|Nach)name" };
+  private static final String[] CONDITION_NAME_ARTICLE = new String[] { "Wortart", "|", "(Vor|Nach)name" };
+
+  private static final ComponentIF FORENAME = new BeginningTemplate("Wortart", "|", "Vorname");
+
+  private static final Component MALE = new Component("m");
+
+  private static final Component MALE_OLD_VARIANT = new Component("Männliche", "Wortformen");
+
+  private static final Component FEMALE_OLD_VARIANT = new Component("Weibliche", "Wortformen");
 
   private static final Logger LOG = LoggerFactory.getLogger(Editor.class);
 
@@ -63,8 +72,8 @@ public class Editor extends GeneralEditor {
                                              new Component("Synonyme"),
                                              new Component("Sinnverwandte", "(Wörter|Zeichen|Redewendungen)"),
                                              new Component("Gegenwörter"),
-                                             new Component("Weibliche", "Wortformen"),
-                                             new Component("Männliche", "Wortformen"),
+                                             FEMALE_OLD_VARIANT,
+                                             MALE_OLD_VARIANT,
                                              new Component("Verkleinerungsformen"),
                                              new Component("Vergrößerungsformen"),
                                              new Component("Oberbegriffe"),
@@ -132,7 +141,8 @@ public class Editor extends GeneralEditor {
     final List<Occurrence> whereEnd = findComponents(text, END_COMPONENTS, new ArrayList<ComponentIF>());
     final int beginEnd = min(whereEnd);
 
-    final Text textWithoutEnd = whereEnd.isEmpty() ? text : text.substring(0, beginEnd);
+    Text textWithoutEnd = whereEnd.isEmpty() ? text : text.substring(0, beginEnd);
+    textWithoutEnd = replaceOldNameVariants(textWithoutEnd);
     final ArrayList<ComponentIF> duplicateComponents = new ArrayList<ComponentIF>();
     final List<Occurrence> whereComponents = findComponents(textWithoutEnd, COMPONENTS, duplicateComponents);
 
@@ -157,6 +167,34 @@ public class Editor extends GeneralEditor {
     }
 
     return tb.toText();
+  }
+
+  private Text replaceOldNameVariants(Text text) {
+    if (FORENAME.getMatcher(text.toString()).find()) {
+      final Matcher femaleOldMatcher = FEMALE_OLD_VARIANT.getMatcher(text.toString());
+      if (femaleOldMatcher.find()) {
+        String replacement;
+        if (MALE.getMatcher(text.toString()).find()) {
+          replacement = "{{Weibliche Namensvarianten}}";
+        } else {
+          replacement = "{{Namensvarianten}}";
+        }
+        text = new Text(text.substring(0, femaleOldMatcher.start()).toPlainString() + replacement
+                        + text.substring(femaleOldMatcher.end()).toPlainString());
+      }
+      final Matcher maleOldMatcher = MALE_OLD_VARIANT.getMatcher(text.toString());
+      if (maleOldMatcher.find()) {
+        String replacement;
+        if (MALE.getMatcher(text.toString()).find()) {
+          replacement = "{{Namensvarianten}}";
+        } else {
+          replacement = "{{Männliche Namensvarianten}}";
+        }
+        text = new Text(text.substring(0, maleOldMatcher.start()).toPlainString() + replacement
+                        + text.substring(maleOldMatcher.end()).toPlainString());
+      }
+    }
+    return text;
   }
 
   private boolean areAlreadyOrderedCorrectly(final List<Occurrence> occurrences) {

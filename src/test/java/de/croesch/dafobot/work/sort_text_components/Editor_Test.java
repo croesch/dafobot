@@ -80,6 +80,16 @@ public class Editor_Test extends Editor_TestCase {
     compare(BEFORE_AFTER_DIR + "duplicate-anmerkung-2");
   }
 
+  @Test
+  public void should_Replace_Old_Name_Variant_Templates_In_Male_Article() throws IOException, URISyntaxException {
+    compare(BEFORE_AFTER_DIR + "vorname-m-old");
+  }
+
+  @Test
+  public void should_Replace_Old_Name_Variant_Templates_In_Female_Article() throws IOException, URISyntaxException {
+    compare(BEFORE_AFTER_DIR + "vorname-f-old");
+  }
+
   @Test(expected = NoEditNeededException.class)
   public void should_Throw_NoEditNeededException_If_No_Components_Available() throws IOException, URISyntaxException {
     edit(NO_EDIT_NEEDED_DIR + "no-components");
