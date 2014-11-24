@@ -54,6 +54,11 @@ public class Editor_Test extends Editor_TestCase {
   }
 
   @Test
+  public void should_Order_Components_Article_In_Both_SubParts() throws IOException, URISyntaxException {
+    compare(BEFORE_AFTER_DIR + "two-subparts");
+  }
+
+  @Test
   public void should_Order_Simple_Article_1() throws IOException, URISyntaxException {
     compare(BEFORE_AFTER_DIR + "simple1");
   }

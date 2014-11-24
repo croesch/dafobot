@@ -99,7 +99,7 @@ public class Editor extends GeneralEditor {
     LOG.info("Begin editing " + title);
 
     final TextBuilder tb = new TextBuilder();
-    final Matcher matcher = Pattern.compile("\n==[^=]").matcher(text.toString());
+    final Matcher matcher = Pattern.compile("\n===?[^=]").matcher(text.toString());
 
     int lastStart = 0;
     boolean found;
