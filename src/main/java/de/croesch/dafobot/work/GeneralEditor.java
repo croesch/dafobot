@@ -1,5 +1,8 @@
 package de.croesch.dafobot.work;
 
+import java.util.Collection;
+import java.util.HashSet;
+
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import de.croesch.dafobot.core.Text;
 import de.croesch.dafobot.work.api.EditorIF;
@@ -19,10 +22,16 @@ public abstract class GeneralEditor implements EditorIF {
     article.setMinorEdit(false);
     article.setEditSummary("Bot: " + getEditSummary());
     final Text text = new Text(article.getText());
-    article.setText(doSpecialEdit(article.getTitle(), text).toPlainString());
+    final Collection<String> additionalActions = new HashSet<>();
+    article.setText(doSpecialEdit(article.getTitle(), text, additionalActions).toPlainString());
+    for (final String additionalAction : additionalActions) {
+      article.setEditSummary(article.getEditSummary() + ", " + additionalAction);
+    }
   }
 
   protected abstract String getEditSummary();
 
-  protected abstract Text doSpecialEdit(String title, Text text) throws NoEditNeededException, PageNeedsQAException;
+  protected abstract Text doSpecialEdit(String title, Text text, Collection<String> additionalActions)
+                                                                                                      throws NoEditNeededException,
+                                                                                                      PageNeedsQAException;
 }

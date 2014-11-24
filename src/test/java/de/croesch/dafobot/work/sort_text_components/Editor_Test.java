@@ -7,6 +7,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 import org.junit.Test;
 
@@ -121,7 +122,7 @@ public class Editor_Test extends Editor_TestCase {
 
   private Text edit(final String resource) throws URISyntaxException, NoEditNeededException, IOException {
     final Path path = pathOfClasspath(resource + ".before");
-    return new Editor().doSpecialEdit(path.toString(), textOf(path));
+    return new Editor().doSpecialEdit(path.toString(), textOf(path), new ArrayList<String>());
   }
 
   private Path pathOfClasspath(final String resource) throws URISyntaxException {

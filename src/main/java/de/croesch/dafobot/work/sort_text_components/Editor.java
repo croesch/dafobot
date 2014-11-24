@@ -2,6 +2,7 @@ package de.croesch.dafobot.work.sort_text_components;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,7 +105,9 @@ public class Editor extends GeneralEditor {
                                                  new Component("Ähnlichkeiten") };
 
   @Override
-  protected Text doSpecialEdit(final String title, final Text text) throws NoEditNeededException, PageNeedsQAException {
+  protected Text doSpecialEdit(final String title, final Text text, final Collection<String> additionalActions)
+                                                                                                               throws NoEditNeededException,
+                                                                                                               PageNeedsQAException {
     LOG.info("Begin editing " + title);
 
     final TextBuilder tb = new TextBuilder();
@@ -120,7 +123,7 @@ public class Editor extends GeneralEditor {
         lastStart = matcher.start();
       }
       try {
-        partText = editPart(partText);
+        partText = editPart(partText, additionalActions);
         editNeeded = true;
       } catch (final NoEditNeededException e) {
         // ignore
@@ -136,13 +139,14 @@ public class Editor extends GeneralEditor {
     return tb.toText();
   }
 
-  private Text editPart(final Text text) throws NoEditNeededException, PageNeedsQAException {
+  private Text editPart(final Text text, final Collection<String> additionalActions) throws NoEditNeededException,
+                                                                                    PageNeedsQAException {
     final TextBuilder tb = new TextBuilder();
     final List<Occurrence> whereEnd = findComponents(text, END_COMPONENTS, new ArrayList<ComponentIF>());
     final int beginEnd = min(whereEnd);
 
     Text textWithoutEnd = whereEnd.isEmpty() ? text : text.substring(0, beginEnd);
-    textWithoutEnd = replaceOldNameVariants(textWithoutEnd);
+    textWithoutEnd = replaceOldNameVariants(textWithoutEnd, additionalActions);
     final ArrayList<ComponentIF> duplicateComponents = new ArrayList<ComponentIF>();
     final List<Occurrence> whereComponents = findComponents(textWithoutEnd, COMPONENTS, duplicateComponents);
 
@@ -169,7 +173,8 @@ public class Editor extends GeneralEditor {
     return tb.toText();
   }
 
-  private Text replaceOldNameVariants(Text text) {
+  private Text replaceOldNameVariants(Text text, final Collection<String> additionalActions) {
+    final String editString = "Wortformen -> Namensvarianten";
     if (FORENAME.getMatcher(text.toString()).find()) {
       final Matcher femaleOldMatcher = FEMALE_OLD_VARIANT.getMatcher(text.toString());
       if (femaleOldMatcher.find()) {
@@ -179,6 +184,7 @@ public class Editor extends GeneralEditor {
         } else {
           replacement = "{{Namensvarianten}}";
         }
+        additionalActions.add(editString);
         text = new Text(text.substring(0, femaleOldMatcher.start()).toPlainString() + replacement
                         + text.substring(femaleOldMatcher.end()).toPlainString());
       }
@@ -190,6 +196,7 @@ public class Editor extends GeneralEditor {
         } else {
           replacement = "{{Männliche Namensvarianten}}";
         }
+        additionalActions.add(editString);
         text = new Text(text.substring(0, maleOldMatcher.start()).toPlainString() + replacement
                         + text.substring(maleOldMatcher.end()).toPlainString());
       }
