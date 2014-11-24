@@ -182,22 +182,24 @@ public class Editor extends GeneralEditor {
     final Matcher emptyMatcher1 = EMPTY1.getMatcher(text.toString());
     if (emptyMatcher1.find()) {
       additionalActions.add("Entferne {{----}}");
-      text = new Text(text.substring(0, emptyMatcher1.start()).toPlainString()
-                      + removePrecedingWhiteSpaces(text.substring(emptyMatcher1.end()).toPlainString()));
+      text = remove(text, emptyMatcher1.start(), emptyMatcher1.end());
     }
 
     final Matcher emptyMatcher2 = EMPTY2.getMatcher(text.toString());
     if (emptyMatcher2.find()) {
       additionalActions.add("Entferne {{2x----}}");
-      text = new Text(text.substring(0, emptyMatcher2.start()).toPlainString()
-                      + removePrecedingWhiteSpaces(text.substring(emptyMatcher2.end()).toPlainString()));
+      text = remove(text, emptyMatcher2.start(), emptyMatcher2.end());
     }
 
     return text;
   }
 
-  private String removePrecedingWhiteSpaces(final String plainString) {
-    return plainString.replaceFirst("^\\s+", "");
+  private Text remove(final Text text, final int from, final int to) {
+    String plainResult = text.substring(0, from).toPlainString();
+    if (to < text.length()) {
+      plainResult += text.substring(to).toPlainString();
+    }
+    return new Text(plainResult);
   }
 
   private Text replaceOldNameVariants(Text text, final Collection<String> additionalActions) {

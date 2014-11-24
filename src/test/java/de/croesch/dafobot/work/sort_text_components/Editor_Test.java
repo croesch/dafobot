@@ -80,6 +80,11 @@ public class Editor_Test extends Editor_TestCase {
   }
 
   @Test
+  public void should_Remove_Empty_Template_Without_Extra_Empty_Lines() throws IOException, URISyntaxException {
+    compare(BEFORE_AFTER_DIR + "empty-template-wo-space");
+  }
+
+  @Test
   public void should_Accept_Duplicate_Anmerkungen_And_Insert_It_In_Original_Order_1() throws IOException,
                                                                                      URISyntaxException {
     compare(BEFORE_AFTER_DIR + "duplicate-anmerkung-1");
