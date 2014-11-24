@@ -87,7 +87,8 @@ public class VerificationFrame extends JFrame {
 
     createFrame();
 
-    this.setVisible(true);
+    setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
+    setVisible(true);
   }
 
   private void createFrame() {
