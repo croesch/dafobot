@@ -159,8 +159,15 @@ public class Editor extends GeneralEditor {
       throw new PageNeedsQAException("duplicate components " + duplicateComponents);
     }
     if (areAlreadyOrderedCorrectly(whereComponents)) {
-      // nothing to sort
-      throw new NoEditNeededException();
+      if (additionalActions.isEmpty()) {
+        // nothing to sort
+        throw new NoEditNeededException();
+      }
+      tb.append(textWithoutEnd);
+      if (!whereEnd.isEmpty()) {
+        tb.append(text.substring(beginEnd));
+      }
+      return tb.toText();
     }
 
     tb.append(begin(textWithoutEnd, whereComponents));
