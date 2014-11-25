@@ -143,15 +143,15 @@ public class Editor extends GeneralEditor {
     return tb.toText();
   }
 
-  private Text editPart(final Text text, final Collection<String> additionalActions) throws NoEditNeededException,
-                                                                                    PageNeedsQAException {
+  private Text editPart(Text text, final Collection<String> additionalActions) throws NoEditNeededException,
+                                                                              PageNeedsQAException {
     final TextBuilder tb = new TextBuilder();
+    text = removeEmptyTemplates(text, additionalActions);
     final List<Occurrence> whereEnd = findComponents(text, END_COMPONENTS, new ArrayList<ComponentIF>());
     final int beginEnd = min(whereEnd);
 
     Text textWithoutEnd = whereEnd.isEmpty() ? text : text.substring(0, beginEnd);
     textWithoutEnd = replaceOldNameVariants(textWithoutEnd, additionalActions);
-    textWithoutEnd = removeEmptyTemplates(textWithoutEnd, additionalActions);
     final ArrayList<ComponentIF> duplicateComponents = new ArrayList<ComponentIF>();
     final List<Occurrence> whereComponents = findComponents(textWithoutEnd, COMPONENTS, duplicateComponents);
 
