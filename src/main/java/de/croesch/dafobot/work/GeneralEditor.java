@@ -28,9 +28,15 @@ public abstract class GeneralEditor implements EditorIF {
     final Collection<String> additionalActions = new HashSet<>();
     article.setText(doSpecialEdit(article.getTitle(), text, connection, additionalActions).toPlainString());
 
+    article.setEditSummary(article.getEditSummary() + getEditSummaryAppendum(additionalActions));
+  }
+
+  protected String getEditSummaryAppendum(final Collection<String> additionalActions) {
+    final StringBuilder sb = new StringBuilder();
     for (final String additionalAction : additionalActions) {
-      article.setEditSummary(article.getEditSummary() + ", " + additionalAction);
+      sb.append(", ").append(additionalAction);
     }
+    return sb.toString();
   }
 
   protected abstract String getEditSummary();

@@ -125,6 +125,21 @@ public class Editor extends GeneralEditor {
 
   @Override
   protected String getEditSummary() {
-    return "Aufgrund einer [[Benutzer:DafoBot/Infobox_Ort_in_der_Slowakei_2014|Anfrage]] habe ich ";
+    return "Aufgrund [[Benutzer:DafoBot/Infobox_Ort_in_der_Slowakei_2014|dieser Anfrage]] ";
+  }
+
+  @Override
+  protected String getEditSummaryAppendum(final Collection<String> additionalActions) {
+    final StringBuilder sb = new StringBuilder();
+    boolean first = true;
+    for (final String additionalAction : additionalActions) {
+      if (first) {
+        first = false;
+      } else {
+        sb.append(", ");
+      }
+      sb.append(additionalAction);
+    }
+    return sb.toString();
   }
 }
