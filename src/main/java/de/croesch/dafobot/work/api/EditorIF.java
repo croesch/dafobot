@@ -1,5 +1,7 @@
 package de.croesch.dafobot.work.api;
 
+import java.sql.Connection;
+
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 
 /**
@@ -10,5 +12,5 @@ import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
  */
 public interface EditorIF {
 
-  void edit(SimpleArticle article) throws NoEditNeededException, PageNeedsQAException;
+  void edit(SimpleArticle article, Connection connection) throws NoEditNeededException, PageNeedsQAException;
 }

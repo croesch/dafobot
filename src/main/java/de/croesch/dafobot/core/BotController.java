@@ -72,7 +72,7 @@ public class BotController {
     if (this.editabilityChecker.canEdit(article)) {
       try {
         LOG.debug("can edit.");
-        this.editor.edit(article);
+        this.editor.edit(article, this.connection);
         LOG.debug("edited.");
         final VerificationResult result = this.verifier.verify(oldArticle, article);
         LOG.debug("verified: " + result);

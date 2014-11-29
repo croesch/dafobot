@@ -137,7 +137,7 @@ public class Editor_Test extends Editor_TestCase {
 
   private Text edit(final String resource) throws URISyntaxException, NoEditNeededException, IOException {
     final Path path = pathOfClasspath(resource + ".before");
-    return new Editor().doSpecialEdit(path.toString(), textOf(path), new ArrayList<String>());
+    return new Editor().doSpecialEdit(path.toString(), textOf(path), null, new ArrayList<String>());
   }
 
   private Path pathOfClasspath(final String resource) throws URISyntaxException {

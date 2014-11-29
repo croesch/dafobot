@@ -1,5 +1,6 @@
 package de.croesch.dafobot.work;
 
+import java.sql.Connection;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -18,12 +19,15 @@ import de.croesch.dafobot.work.api.PageNeedsQAException;
 public abstract class GeneralEditor implements EditorIF {
 
   @Override
-  public final void edit(final SimpleArticle article) throws NoEditNeededException, PageNeedsQAException {
+  public final void edit(final SimpleArticle article, final Connection connection) throws NoEditNeededException,
+                                                                                  PageNeedsQAException {
     article.setMinorEdit(false);
     article.setEditSummary("Bot: " + getEditSummary());
+
     final Text text = new Text(article.getText());
     final Collection<String> additionalActions = new HashSet<>();
-    article.setText(doSpecialEdit(article.getTitle(), text, additionalActions).toPlainString());
+    article.setText(doSpecialEdit(article.getTitle(), text, connection, additionalActions).toPlainString());
+
     for (final String additionalAction : additionalActions) {
       article.setEditSummary(article.getEditSummary() + ", " + additionalAction);
     }
@@ -31,7 +35,9 @@ public abstract class GeneralEditor implements EditorIF {
 
   protected abstract String getEditSummary();
 
-  protected abstract Text doSpecialEdit(String title, Text text, Collection<String> additionalActions)
-                                                                                                      throws NoEditNeededException,
-                                                                                                      PageNeedsQAException;
+  protected abstract Text doSpecialEdit(String title,
+                                        Text text,
+                                        Connection connection,
+                                        Collection<String> additionalActions) throws NoEditNeededException,
+                                                                             PageNeedsQAException;
 }

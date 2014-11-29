@@ -1,5 +1,6 @@
 package de.croesch.dafobot.work.sort_text_components;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -109,9 +110,11 @@ public class Editor extends GeneralEditor {
                                                  new Component("Ähnlichkeiten") };
 
   @Override
-  protected Text doSpecialEdit(final String title, final Text text, final Collection<String> additionalActions)
-                                                                                                               throws NoEditNeededException,
-                                                                                                               PageNeedsQAException {
+  protected Text doSpecialEdit(final String title,
+                               final Text text,
+                               final Connection connection,
+                               final Collection<String> additionalActions) throws NoEditNeededException,
+                                                                          PageNeedsQAException {
     LOG.info("Begin editing " + title);
 
     final TextBuilder tb = new TextBuilder();

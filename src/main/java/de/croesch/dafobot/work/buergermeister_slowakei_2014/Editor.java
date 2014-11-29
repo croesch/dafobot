@@ -1,5 +1,6 @@
 package de.croesch.dafobot.work.buergermeister_slowakei_2014;
 
+import java.sql.Connection;
 import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,9 +32,11 @@ public class Editor extends GeneralEditor {
   private static final Pattern INFOBOX = Pattern.compile(INFOBOX_TXT);
 
   @Override
-  protected Text doSpecialEdit(final String title, Text text, final Collection<String> additionalActions)
-                                                                                                         throws NoEditNeededException,
-                                                                                                         PageNeedsQAException {
+  protected Text doSpecialEdit(final String title,
+                               Text text,
+                               final Connection connection,
+                               final Collection<String> additionalActions) throws NoEditNeededException,
+                                                                          PageNeedsQAException {
     LOG.info("Begin editing " + title);
 
     if (!INFOBOX.matcher(text.toString()).find()) {
