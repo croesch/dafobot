@@ -51,6 +51,10 @@ public class Editor extends GeneralEditor {
     text = update(text, BUERGERMEISTER_TXT, newMayor, "Bgm. aktualisiert", additionalActions);
     text = update(text, STAND_VERWALTUNG_TXT, "November 2014", "Dat. aktualisiert", additionalActions);
 
+    if (additionalActions.isEmpty()) {
+      throw new NoEditNeededException();
+    }
+
     LOG.info("End editing " + title);
     return text;
   }
