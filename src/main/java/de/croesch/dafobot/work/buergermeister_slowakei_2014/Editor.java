@@ -81,7 +81,9 @@ public class Editor extends GeneralEditor {
 
       final ResultSet rs = statement.executeQuery();
       if (rs.next()) {
-        final String mayor = rs.getString(1);
+        final String mayor = rs.getString(1)
+        // fix for dirty data in database
+                               .replaceAll("  +", " ");
         if (rs.next()) {
           throw new PageNeedsQAException("more than one mayor found");
         }
