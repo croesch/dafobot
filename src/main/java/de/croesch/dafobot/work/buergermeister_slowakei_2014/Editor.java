@@ -60,9 +60,9 @@ public class Editor extends GeneralEditor {
   }
 
   private String getMayor(final Text text, final Connection connection) throws PageNeedsQAException {
-    final Matcher okresMatcher = Pattern.compile(INFOBOX_TXT + ".*OKRES\\s*=\\s*([^|\n]*).*?\n\\}\\}", Pattern.DOTALL)
+    final Matcher okresMatcher = Pattern.compile(INFOBOX_TXT + ".*?OKRES\\s*=\\s*([^|\n]*).*?\\}\\}", Pattern.DOTALL)
                                         .matcher(text.toString());
-    final Matcher cityMatcher = Pattern.compile(INFOBOX_TXT + ".*NAME\\s*=\\s*([^|\n]*).*?\n\\}\\}", Pattern.DOTALL)
+    final Matcher cityMatcher = Pattern.compile(INFOBOX_TXT + ".*?NAME\\s*=\\s*([^|\n]*).*?\\}\\}", Pattern.DOTALL)
                                        .matcher(text.toString());
 
     if (!okresMatcher.find()) {
