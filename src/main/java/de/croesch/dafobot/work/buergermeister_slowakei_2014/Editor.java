@@ -60,40 +60,59 @@ public class Editor extends GeneralEditor {
   }
 
   private String getMayor(final Text text, final Connection connection) throws PageNeedsQAException {
-    final Matcher okresMatcher = Pattern.compile(INFOBOX_TXT + ".*?OKRES\\s*=\\s*([^|\n]*).*?\\}\\}", Pattern.DOTALL)
-                                        .matcher(text.toString());
-    final Matcher cityMatcher = Pattern.compile(INFOBOX_TXT + ".*?NAME\\s*=\\s*([^|\n]*).*?\\}\\}", Pattern.DOTALL)
+    final Matcher codeMatcher = Pattern.compile(INFOBOX_TXT + ".*?CODE\\s*=\\s*([0-9]+).*?\\}\\}", Pattern.DOTALL)
                                        .matcher(text.toString());
 
-    if (!okresMatcher.find()) {
-      throw new PageNeedsQAException("Cannot extract okres");
-    }
-    if (!cityMatcher.find()) {
-      throw new PageNeedsQAException("Cannot extract city");
-    }
+    try {
+      if (codeMatcher.find()) {
+        final Integer code = Integer.valueOf(codeMatcher.group(1));
 
-    final String okres = okresMatcher.group(1);
-    final String city = cityMatcher.group(1);
+        try (final PreparedStatement statement = connection.prepareStatement("SELECT buergermeister FROM `election` WHERE id=?");) {
+          statement.setInt(1, code);
 
-    try (final PreparedStatement statement = connection.prepareStatement("SELECT buergermeister FROM `election` WHERE okres=? AND ort=?");) {
-      statement.setString(1, okres);
-      statement.setString(2, city);
-
-      final ResultSet rs = statement.executeQuery();
-      if (rs.next()) {
-        final String mayor = rs.getString(1)
-        // fix for dirty data in database
-                               .replaceAll("  +", " ");
-        if (rs.next()) {
-          throw new PageNeedsQAException("more than one mayor found");
+          return extractMayorFromResultSet(statement.executeQuery());
         }
-        return mayor;
       } else {
-        throw new PageNeedsQAException("new mayor not found");
+        LOG.info("CODE not found - falling back to OKRES+NAME.");
+        final Matcher okresMatcher = Pattern.compile(INFOBOX_TXT + ".*?OKRES\\s*=\\s*([^|\n]*).*?\\}\\}",
+                                                     Pattern.DOTALL).matcher(text.toString());
+        final Matcher cityMatcher = Pattern.compile(INFOBOX_TXT + ".*?NAME\\s*=\\s*([^|\n]*).*?\\}\\}", Pattern.DOTALL)
+                                           .matcher(text.toString());
+
+        if (!okresMatcher.find()) {
+          throw new PageNeedsQAException("Cannot extract okres");
+        }
+        if (!cityMatcher.find()) {
+          throw new PageNeedsQAException("Cannot extract city");
+        }
+
+        final String okres = okresMatcher.group(1);
+        final String city = cityMatcher.group(1);
+
+        try (final PreparedStatement statement = connection.prepareStatement("SELECT buergermeister FROM `election` WHERE okres=? AND ort=?");) {
+          statement.setString(1, okres);
+          statement.setString(2, city);
+
+          return extractMayorFromResultSet(statement.executeQuery());
+        }
       }
     } catch (final SQLException e) {
       e.printStackTrace();
       throw new PageNeedsQAException(e.getMessage());
+    }
+  }
+
+  private String extractMayorFromResultSet(final ResultSet rs) throws PageNeedsQAException, SQLException {
+    if (rs.next()) {
+      final String mayor = rs.getString(1)
+      // fix for dirty data in database
+                             .replaceAll("  +", " ");
+      if (rs.next()) {
+        throw new PageNeedsQAException("more than one mayor found");
+      }
+      return mayor;
+    } else {
+      throw new PageNeedsQAException("new mayor not found");
     }
   }
 
@@ -102,8 +121,8 @@ public class Editor extends GeneralEditor {
                       final String newValue,
                       final String editNote,
                       final Collection<String> additionalActions) throws PageNeedsQAException {
-    final Matcher attrMatcher = Pattern.compile(INFOBOX_TXT + ".*(" + attr + "(\\s*=\\s*)([^|\n]*)).*?\n\\}\\}",
-                                                Pattern.DOTALL).matcher(text.toString());
+    final Matcher attrMatcher = Pattern.compile(INFOBOX_TXT + ".*(" + attr + "(\\s*=\\s*)([^|\n]*))", Pattern.DOTALL)
+                                       .matcher(text.toString());
 
     if (!attrMatcher.find()) {
       throw new PageNeedsQAException("Attribute '" + attr + "' not found");
