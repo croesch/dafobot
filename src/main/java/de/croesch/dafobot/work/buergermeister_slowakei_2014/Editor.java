@@ -49,7 +49,7 @@ public class Editor extends GeneralEditor {
     final String newMayor = getMayor(text, connection);
 
     text = update(text, BUERGERMEISTER_TXT, newMayor, "Bgm. aktualisiert", additionalActions);
-    text = update(text, STAND_VERWALTUNG_TXT, "November 2014", "Dat. aktualisiert", additionalActions);
+    text = update(text, STAND_VERWALTUNG_TXT, "November 2014", "Datum aktualisiert", additionalActions);
 
     if (additionalActions.isEmpty()) {
       throw new NoEditNeededException();
@@ -83,7 +83,7 @@ public class Editor extends GeneralEditor {
       if (rs.next()) {
         final String mayor = rs.getString(1);
         if (rs.next()) {
-          throw new PageNeedsQAException("new mayor not found");
+          throw new PageNeedsQAException("more than one mayor found");
         }
         return mayor;
       } else {
@@ -91,10 +91,8 @@ public class Editor extends GeneralEditor {
       }
     } catch (final SQLException e) {
       e.printStackTrace();
-      LOG.error(e.getMessage());
+      throw new PageNeedsQAException(e.getMessage());
     }
-
-    return null;
   }
 
   private Text update(final Text text,
