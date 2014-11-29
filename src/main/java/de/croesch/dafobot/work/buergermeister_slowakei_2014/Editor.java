@@ -1,6 +1,9 @@
 package de.croesch.dafobot.work.buergermeister_slowakei_2014;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,11 +46,51 @@ public class Editor extends GeneralEditor {
       throw new PageNeedsQAException("infobox not found!");
     }
 
-    text = update(text, BUERGERMEISTER_TXT, "neuer Bürgermeister", "Bgm. aktualisiert", additionalActions);
+    final String newMayor = getMayor(text, connection);
+
+    text = update(text, BUERGERMEISTER_TXT, newMayor, "Bgm. aktualisiert", additionalActions);
     text = update(text, STAND_VERWALTUNG_TXT, "November 2014", "Dat. aktualisiert", additionalActions);
 
     LOG.info("End editing " + title);
     return text;
+  }
+
+  private String getMayor(final Text text, final Connection connection) throws PageNeedsQAException {
+    final Matcher okresMatcher = Pattern.compile(INFOBOX_TXT + ".*OKRES\\s*=\\s*([^|\n]*).*?\n\\}\\}", Pattern.DOTALL)
+                                        .matcher(text.toString());
+    final Matcher cityMatcher = Pattern.compile(INFOBOX_TXT + ".*NAME\\s*=\\s*([^|\n]*).*?\n\\}\\}", Pattern.DOTALL)
+                                       .matcher(text.toString());
+
+    if (!okresMatcher.find()) {
+      throw new PageNeedsQAException("Cannot extract okres");
+    }
+    if (!cityMatcher.find()) {
+      throw new PageNeedsQAException("Cannot extract city");
+    }
+
+    final String okres = okresMatcher.group(1);
+    final String city = cityMatcher.group(1);
+
+    try (final PreparedStatement statement = connection.prepareStatement("SELECT buergermeister FROM `election` WHERE okres=? AND ort=?");) {
+      statement.setString(1, okres);
+      statement.setString(2, city);
+
+      final ResultSet rs = statement.executeQuery();
+      if (rs.next()) {
+        final String mayor = rs.getString(1);
+        if (rs.next()) {
+          throw new PageNeedsQAException("new mayor not found");
+        }
+        return mayor;
+      } else {
+        throw new PageNeedsQAException("new mayor not found");
+      }
+    } catch (final SQLException e) {
+      e.printStackTrace();
+      LOG.error(e.getMessage());
+    }
+
+    return null;
   }
 
   private Text update(final Text text,
