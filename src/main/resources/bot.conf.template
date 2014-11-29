@@ -16,8 +16,10 @@ user.password = this-should-be-super-secret-and-safe
 
 # database
 ##########################################
-# the url to the database
-db.url        = ...
+# the url to the database for sorting text components
+db.url.sort   = ...
+# the url to the database for updating the 'buergermeister' in slowakei 2014
+db.url.bmsk14 = ...
 
 # the username for the bot in the database
 db.user       = IWasAlsoHere
