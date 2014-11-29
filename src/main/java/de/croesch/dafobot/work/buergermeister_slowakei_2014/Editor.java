@@ -48,7 +48,7 @@ public class Editor extends GeneralEditor {
 
     final String newMayor = getMayor(text, connection);
 
-    text = update(text, BUERGERMEISTER_TXT, newMayor, "Bgm. aktualisiert", additionalActions);
+    text = update(text, BUERGERMEISTER_TXT, newMayor, "Bürgermeister aktualisiert", additionalActions);
     text = update(text, STAND_VERWALTUNG_TXT, "November 2014", "Datum aktualisiert", additionalActions);
 
     if (additionalActions.isEmpty()) {
@@ -123,7 +123,7 @@ public class Editor extends GeneralEditor {
 
   @Override
   protected String getEditSummary() {
-    return "Aufgrund [[Benutzer:DafoBot/Infobox_Ort_in_der_Slowakei_2014|dieser Anfrage]] ";
+    return "Aufgrund von Neuwahlen ([[Benutzer:DafoBot/Infobox_Ort_in_der_Slowakei_2014|weitere Infos]]) ";
   }
 
   @Override
