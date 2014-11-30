@@ -34,6 +34,10 @@ public class Editor extends GeneralEditor {
 
   private static final Pattern INFOBOX = Pattern.compile(INFOBOX_TXT);
 
+  public Editor() {
+    super(true);
+  }
+
   @Override
   protected Text doSpecialEdit(final String title,
                                Text text,

@@ -18,10 +18,20 @@ import de.croesch.dafobot.work.api.PageNeedsQAException;
  */
 public abstract class GeneralEditor implements EditorIF {
 
+  private final boolean minor;
+
+  public GeneralEditor() {
+    this(false);
+  }
+
+  public GeneralEditor(final boolean minorEdits) {
+    this.minor = minorEdits;
+  }
+
   @Override
   public final void edit(final SimpleArticle article, final Connection connection) throws NoEditNeededException,
                                                                                   PageNeedsQAException {
-    article.setMinorEdit(false);
+    article.setMinorEdit(this.minor);
     article.setEditSummary("Bot: " + getEditSummary());
 
     final Text text = new Text(article.getText());
