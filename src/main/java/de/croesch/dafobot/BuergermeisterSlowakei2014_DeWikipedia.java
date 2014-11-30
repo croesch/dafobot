@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import de.croesch.dafobot.core.BotController;
 import de.croesch.dafobot.jwbf.mediawiki.bots.WikipediaDeBot;
-import de.croesch.dafobot.work.VisualManualVerifier;
+import de.croesch.dafobot.work.AutomaticVerifier;
 import de.croesch.dafobot.work.api.ChangeVerifierIF;
 import de.croesch.dafobot.work.api.EditorIF;
 import de.croesch.dafobot.work.api.PageEditabilityCheckerIF;
@@ -43,7 +43,7 @@ public class BuergermeisterSlowakei2014_DeWikipedia {
       final PagePoolIF pages = new PagePool(bot, connection);
       final PageEditabilityCheckerIF editabilityChecker = new PageEditabilityChecker();
       final EditorIF editor = new Editor();
-      final ChangeVerifierIF verifier = new VisualManualVerifier();
+      final ChangeVerifierIF verifier = new AutomaticVerifier();
 
       final BotController controller = new BotController(bot, connection, pages, editabilityChecker, editor, verifier);
       controller.run();
