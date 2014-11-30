@@ -97,6 +97,7 @@ public class BotController {
       }
     } else {
       LOG.warn("Cannot edit " + next);
+      insertProblematicArticle(article.getTitle(), "in use", false);
     }
     return true;
   }
