@@ -46,7 +46,7 @@ public class MediaWikiBot extends net.sourceforge.jwbf.mediawiki.bots.MediaWikiB
         LOG.warn(e.getMessage());
       }
     }
-    super.writeContent(simpleArticle);
     this.lastWrite = System.currentTimeMillis();
+    super.writeContent(simpleArticle);
   }
 }
