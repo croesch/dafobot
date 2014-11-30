@@ -12,7 +12,7 @@ import de.croesch.dafobot.work.api.PageEditabilityCheckerIF;
  * @since Date: Nov 16, 2014
  */
 public class GeneralPageEditabilityChecker implements PageEditabilityCheckerIF {
-  public static final Pattern INUSE = Pattern.compile("\\{\\{Inuse(\\}\\}|\\|)");
+  public static final Pattern INUSE = Pattern.compile("\\{\\{[Ii]n((use(Bot)?)| Bearbeitung)(\\}\\}|\\|)");
 
   @Override
   public final boolean canEdit(final SimpleArticle article) {
