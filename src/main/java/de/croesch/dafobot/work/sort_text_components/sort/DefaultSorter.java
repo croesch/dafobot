@@ -52,9 +52,7 @@ abstract class DefaultSorter extends AbstractSorter {
     return tb.toText();
   }
 
-  protected int findSuffix(final Text text) {
-    return text.length();
-  }
+  protected abstract int findSuffix(final Text text);
 
   private void appendPrefix(final TextBuilder tb, final Text text, final List<Occurrence> occurrences) {
     if (occurrences.isEmpty()) {
@@ -72,7 +70,8 @@ abstract class DefaultSorter extends AbstractSorter {
                                                                                                                     throws PageNeedsQAException,
                                                                                                                     NoEditNeededException {
     boolean editNeeded = false;
-    for (Text t : result) {
+    for (int i = 0; i < result.size(); ++i) {
+      Text t = result.get(i);
       try {
         t = edit(t, additionalActions);
         editNeeded = true;
@@ -80,6 +79,10 @@ abstract class DefaultSorter extends AbstractSorter {
         // ignore
       }
       tb.append(t);
+      // each result is trimmed so append 'divider' (except for last one)
+      if (i + 1 < result.size()) {
+        tb.append(new Text("\n\n"));
+      }
     }
 
     if (!editNeeded) {
@@ -91,7 +94,12 @@ abstract class DefaultSorter extends AbstractSorter {
     final List<Occurrence> occurrences = new ArrayList<>();
 
     while (matcher.find()) {
-      occurrences.add(new Occurrence(new Range(matcher.start())));
+      int offset = 0;
+      // don't let new line be part of the occurrence
+      if (matcher.group().startsWith("\n")) {
+        ++offset;
+      }
+      occurrences.add(new Occurrence(new Range(matcher.start() + offset)));
     }
     return occurrences;
   }
@@ -99,18 +107,19 @@ abstract class DefaultSorter extends AbstractSorter {
   private List<Text> split(final Text text, final List<Occurrence> occurrences) {
     final List<Text> texts = new ArrayList<>();
     for (final Occurrence occurrence : occurrences) {
+      Text toAdd;
       if (occurrence.where().getTo() < 0) {
-        texts.add(text.substring(occurrence.where().getFrom()));
+        toAdd = text.substring(occurrence.where().getFrom());
       } else {
-        texts.add(text.substring(occurrence.where().getFrom(), occurrence.where().getTo()));
+        toAdd = text.substring(occurrence.where().getFrom(), occurrence.where().getTo());
       }
+      // add it trimmed to simplify sorting
+      texts.add(new Text(toAdd.toPlainString().trim()));
     }
     return texts;
   }
 
-  private List<Text> sort(final List<Text> texts) {
-    return texts;
-  }
+  protected abstract List<Text> sort(final List<Text> texts) throws PageNeedsQAException;
 
   private Text edit(final Text text, final Collection<String> additionalActions) throws PageNeedsQAException,
                                                                                 NoEditNeededException {
