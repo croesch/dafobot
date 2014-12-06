@@ -1,6 +1,7 @@
 package de.croesch.dafobot.work.sort_text_components.sort;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,7 +18,7 @@ import de.croesch.dafobot.work.api.PageNeedsQAException;
  * @author dafo
  * @since Date: Dec 6, 2014
  */
-abstract class DefaultSorter implements Sorter {
+abstract class DefaultSorter extends AbstractSorter {
 
   private final Sorter subSorter;
 
@@ -41,7 +42,7 @@ abstract class DefaultSorter implements Sorter {
         lastStart = matcher.start();
       }
       try {
-        partText = this.subSorter.sort(partText, additionalActions);
+        partText = edit(partText, additionalActions);
         editNeeded = true;
       } catch (final NoEditNeededException e) {
         // ignore
@@ -54,6 +55,19 @@ abstract class DefaultSorter implements Sorter {
     }
 
     return tb.toText();
+  }
+
+  private List<Text> split(final Text text) {
+    return null;
+  }
+
+  private List<Text> sort(final List<Text> texts) {
+    return texts;
+  }
+
+  private Text edit(final Text text, final Collection<String> additionalActions) throws PageNeedsQAException,
+                                                                                NoEditNeededException {
+    return this.subSorter.sort(text, additionalActions);
   }
 
   protected abstract Pattern pattern();

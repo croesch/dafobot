@@ -1,11 +1,8 @@
 package de.croesch.dafobot.work.sort_text_components.sort;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 
 import de.croesch.dafobot.core.Text;
@@ -28,7 +25,7 @@ import de.croesch.dafobot.work.sort_text_components.comp.PseudoComp_Uebersetzung
  * @author dafo
  * @since Date: Dec 6, 2014
  */
-public class ComponentSorter implements Sorter {
+public class ComponentSorter extends AbstractSorter {
 
   private static final ComponentIF FORENAME = new BeginningTemplate("Wortart", "|", "Vorname");
 
@@ -240,24 +237,6 @@ public class ComponentSorter implements Sorter {
 
     fillRange(occurrences);
     return occurrences;
-  }
-
-  private void fillRange(final List<Occurrence> occurrences) {
-    final int[] starts = new int[occurrences.size()];
-    for (int i = 0; i < occurrences.size(); ++i) {
-      starts[i] = occurrences.get(i).where().getFrom();
-    }
-    Arrays.sort(starts);
-    final Map<Integer, Integer> ends = new HashMap<>();
-    for (int i = 0; i < starts.length - 1; ++i) {
-      ends.put(starts[i], starts[i + 1]);
-    }
-
-    for (int i = 0; i < occurrences.size(); ++i) {
-      if (ends.containsKey(occurrences.get(i).where().getFrom())) {
-        occurrences.get(i).where().setTo(ends.get(occurrences.get(i).where().getFrom()));
-      }
-    }
   }
 
   private Text begin(final Text text, final List<Occurrence> where) {
