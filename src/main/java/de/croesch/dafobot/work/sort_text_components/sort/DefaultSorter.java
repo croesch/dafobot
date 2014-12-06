@@ -33,18 +33,27 @@ abstract class DefaultSorter extends AbstractSorter {
   public final Text sort(final Text text, final Collection<String> additionalActions) throws NoEditNeededException,
                                                                                      PageNeedsQAException {
     final TextBuilder tb = new TextBuilder();
-    final Matcher matcher = pattern().matcher(text.toString());
+
+    final int beginOfSuffix = findSuffix(text);
+    final Text textWithoutSuffix = text.substring(0, beginOfSuffix);
+
+    final Matcher matcher = pattern().matcher(textWithoutSuffix.toString());
 
     final List<Occurrence> occurrences = findOccurrences(matcher);
     fillRange(occurrences);
 
-    List<Text> result = split(text, occurrences);
+    List<Text> result = split(textWithoutSuffix, occurrences);
     result = sort(result);
 
-    appendPrefix(tb, text, occurrences);
+    appendPrefix(tb, textWithoutSuffix, occurrences);
     appendBody(additionalActions, tb, result);
+    appendSuffix(tb, text, beginOfSuffix);
 
     return tb.toText();
+  }
+
+  protected int findSuffix(final Text text) {
+    return text.length();
   }
 
   private void appendPrefix(final TextBuilder tb, final Text text, final List<Occurrence> occurrences) {
@@ -53,6 +62,10 @@ abstract class DefaultSorter extends AbstractSorter {
     } else {
       tb.append(text.substring(0, occurrences.get(0).where().getFrom()));
     }
+  }
+
+  private void appendSuffix(final TextBuilder tb, final Text text, final int beginOfSuffix) {
+    tb.append(text.substring(beginOfSuffix));
   }
 
   private void appendBody(final Collection<String> additionalActions, final TextBuilder tb, final List<Text> result)
