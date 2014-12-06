@@ -2,18 +2,17 @@ package de.croesch.dafobot.work.sort_text_components;
 
 import java.sql.Connection;
 import java.util.Collection;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.croesch.dafobot.core.Text;
-import de.croesch.dafobot.core.TextBuilder;
 import de.croesch.dafobot.work.GeneralEditor;
 import de.croesch.dafobot.work.api.NoEditNeededException;
 import de.croesch.dafobot.work.api.PageNeedsQAException;
 import de.croesch.dafobot.work.sort_text_components.sort.ComponentSorter;
+import de.croesch.dafobot.work.sort_text_components.sort.PartSorter;
+import de.croesch.dafobot.work.sort_text_components.sort.SubPartSorter;
 
 /**
  * Sorts the text of an article.
@@ -32,34 +31,12 @@ public class Editor extends GeneralEditor {
                                                                           PageNeedsQAException {
     LOG.info("Begin editing " + title);
 
-    final TextBuilder tb = new TextBuilder();
-    final Matcher matcher = Pattern.compile("\n===?[^=]").matcher(text.toString());
-    final ComponentSorter sorter = new ComponentSorter();
+    final PartSorter sorter = new PartSorter(new SubPartSorter(new ComponentSorter()));
 
-    int lastStart = 0;
-    boolean found;
-    boolean editNeeded = false;
-    do {
-      found = matcher.find();
-      Text partText = text.substring(lastStart, found ? matcher.start() : text.length());
-      if (found) {
-        lastStart = matcher.start();
-      }
-      try {
-        partText = sorter.sort(partText, additionalActions);
-        editNeeded = true;
-      } catch (final NoEditNeededException e) {
-        // ignore
-      }
-      tb.append(partText);
-    } while (found);
-
-    if (!editNeeded) {
-      throw new NoEditNeededException();
-    }
+    final Text result = sorter.sort(text, additionalActions);
 
     LOG.info("End editing " + title);
-    return tb.toText();
+    return result;
   }
 
   @Override
