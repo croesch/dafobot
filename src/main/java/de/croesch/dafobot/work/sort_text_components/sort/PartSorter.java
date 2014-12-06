@@ -16,6 +16,6 @@ public class PartSorter extends DefaultSorter {
 
   @Override
   protected Pattern pattern() {
-    return Pattern.compile("\n==[^=]");
+    return Pattern.compile("(\n|^)==[^=]");
   }
 }
