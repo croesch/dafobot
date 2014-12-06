@@ -127,6 +127,12 @@ public class Editor_Test extends Editor_TestCase {
     edit(NO_EDIT_NEEDED_DIR + "correct-order");
   }
 
+  @Test(expected = NoEditNeededException.class)
+  public void should_Throw_NoEditNeededException_If_Only_Empty_Templates_Would_Be_Removed() throws IOException,
+                                                                                           URISyntaxException {
+    edit(NO_EDIT_NEEDED_DIR + "with-empty-templates");
+  }
+
   @Test(expected = PageNeedsQAException.class)
   public void should_Throw_PageNeedsQAException_If_Component_Comes_Twice_Consecutive() throws IOException,
                                                                                       URISyntaxException {

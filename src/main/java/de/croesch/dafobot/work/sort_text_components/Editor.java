@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.croesch.dafobot.core.Text;
-import de.croesch.dafobot.work.GeneralEditor;
+import de.croesch.dafobot.work.WiktionaryEditor;
 import de.croesch.dafobot.work.api.NoEditNeededException;
 import de.croesch.dafobot.work.api.PageNeedsQAException;
 import de.croesch.dafobot.work.sort_text_components.sort.ComponentSorter;
@@ -20,15 +20,14 @@ import de.croesch.dafobot.work.sort_text_components.sort.SubPartSorter;
  * @author dafo
  * @since Date: Nov 16, 2014
  */
-public class Editor extends GeneralEditor {
+public class Editor extends WiktionaryEditor {
   private static final Logger LOG = LoggerFactory.getLogger(Editor.class);
 
   @Override
-  protected Text doSpecialEdit(final String title,
-                               final Text text,
-                               final Connection connection,
-                               final Collection<String> additionalActions) throws NoEditNeededException,
-                                                                          PageNeedsQAException {
+  protected Text edit(final String title,
+                      final Text text,
+                      final Connection connection,
+                      final Collection<String> additionalActions) throws NoEditNeededException, PageNeedsQAException {
     LOG.info("Begin editing " + title);
 
     final PartSorter sorter = new PartSorter(new SubPartSorter(new ComponentSorter()));

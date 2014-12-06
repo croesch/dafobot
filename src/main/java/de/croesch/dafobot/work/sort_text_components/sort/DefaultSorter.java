@@ -42,14 +42,24 @@ abstract class DefaultSorter extends AbstractSorter {
     final List<Occurrence> occurrences = findOccurrences(matcher);
     fillRange(occurrences);
 
-    List<Text> result = split(textWithoutSuffix, occurrences);
-    result = sort(result);
+    final List<Text> result = split(textWithoutSuffix, occurrences);
+    final List<Text> sortedResult = sort(result);
+
+    boolean editNeeded = areDifferent(result, sortedResult);
 
     appendPrefix(tb, textWithoutSuffix, occurrences);
-    appendBody(additionalActions, tb, result);
+    editNeeded |= appendBody(additionalActions, tb, sortedResult);
     appendSuffix(tb, text, beginOfSuffix);
 
+    if (!editNeeded) {
+      throw new NoEditNeededException();
+    }
+
     return tb.toText();
+  }
+
+  private boolean areDifferent(final List<Text> result, final List<Text> sortedResult) {
+    return !result.equals(sortedResult);
   }
 
   protected abstract int findSuffix(final Text text);
@@ -66,9 +76,9 @@ abstract class DefaultSorter extends AbstractSorter {
     tb.append(text.substring(beginOfSuffix));
   }
 
-  private void appendBody(final Collection<String> additionalActions, final TextBuilder tb, final List<Text> result)
-                                                                                                                    throws PageNeedsQAException,
-                                                                                                                    NoEditNeededException {
+  private boolean appendBody(final Collection<String> additionalActions, final TextBuilder tb, final List<Text> result)
+                                                                                                                       throws PageNeedsQAException,
+                                                                                                                       NoEditNeededException {
     boolean editNeeded = false;
     for (int i = 0; i < result.size(); ++i) {
       Text t = result.get(i);
@@ -85,9 +95,7 @@ abstract class DefaultSorter extends AbstractSorter {
       }
     }
 
-    if (!editNeeded) {
-      throw new NoEditNeededException();
-    }
+    return editNeeded;
   }
 
   private List<Occurrence> findOccurrences(final Matcher matcher) {

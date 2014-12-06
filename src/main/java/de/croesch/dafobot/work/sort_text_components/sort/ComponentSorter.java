@@ -31,10 +31,6 @@ public class ComponentSorter extends AbstractSorter {
 
   private static final Component MALE = new Component("m");
 
-  private static final Component EMPTY1 = new Component("----");
-
-  private static final Component EMPTY2 = new Component("2x----");
-
   private static final String[] CONDITION_NAME_ARTICLE = new String[] { "Wortart", "|", "(Vor|Nach)name" };
 
   private static final Component MALE_OLD_VARIANT = new Component("Männliche", "Wortformen");
@@ -102,10 +98,9 @@ public class ComponentSorter extends AbstractSorter {
                                                  new Component("Ähnlichkeiten") };
 
   @Override
-  public Text sort(Text text, final Collection<String> additionalActions) throws PageNeedsQAException,
-                                                                         NoEditNeededException {
+  public Text sort(final Text text, final Collection<String> additionalActions) throws PageNeedsQAException,
+                                                                               NoEditNeededException {
     final TextBuilder tb = new TextBuilder();
-    text = removeEmptyTemplates(text, additionalActions);
     final List<Occurrence> whereEnd = findComponents(text, END_COMPONENTS, new ArrayList<ComponentIF>());
     final int beginEnd = min(whereEnd);
 
@@ -142,30 +137,6 @@ public class ComponentSorter extends AbstractSorter {
     }
 
     return tb.toText();
-  }
-
-  private Text removeEmptyTemplates(Text text, final Collection<String> additionalActions) {
-    final Matcher emptyMatcher1 = EMPTY1.getMatcher(text.toString());
-    if (emptyMatcher1.find()) {
-      additionalActions.add("Entferne {{----}}");
-      text = remove(text, emptyMatcher1.start(), emptyMatcher1.end());
-    }
-
-    final Matcher emptyMatcher2 = EMPTY2.getMatcher(text.toString());
-    if (emptyMatcher2.find()) {
-      additionalActions.add("Entferne {{2x----}}");
-      text = remove(text, emptyMatcher2.start(), emptyMatcher2.end());
-    }
-
-    return text;
-  }
-
-  private Text remove(final Text text, final int from, final int to) {
-    String plainResult = text.substring(0, from).toPlainString();
-    if (to < text.length()) {
-      plainResult += text.substring(to).toPlainString();
-    }
-    return new Text(plainResult);
   }
 
   private Text replaceOldNameVariants(Text text, final Collection<String> additionalActions) {
