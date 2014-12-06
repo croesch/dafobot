@@ -23,7 +23,7 @@ public abstract class WiktionaryEditor extends GeneralEditor {
                                                                              PageNeedsQAException {
     Text subResult = edit(title, text, connection, additionalActions);
     subResult = new EmptyTemplateRemover().edit(subResult, additionalActions);
-    subResult = new DuplicateEmptyLineRemover().edit(subResult, additionalActions);
+    subResult = new KosmetikEditor().edit(subResult, additionalActions);
     return subResult;
   }
 
