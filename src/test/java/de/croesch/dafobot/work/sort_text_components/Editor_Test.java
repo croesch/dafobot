@@ -106,6 +106,16 @@ public class Editor_Test extends Editor_TestCase {
     compare(BEFORE_AFTER_DIR + "vorname-f-old");
   }
 
+  @Test
+  public void should_Sort_Language_Parts_German_International_Alphabetical_1() throws IOException, URISyntaxException {
+    compare(BEFORE_AFTER_DIR + "language-sorting-1");
+  }
+
+  @Test
+  public void should_Sort_Language_Parts_German_International_Alphabetical_2() throws IOException, URISyntaxException {
+    compare(BEFORE_AFTER_DIR + "language-sorting-2");
+  }
+
   @Test(expected = NoEditNeededException.class)
   public void should_Throw_NoEditNeededException_If_No_Components_Available() throws IOException, URISyntaxException {
     edit(NO_EDIT_NEEDED_DIR + "no-components");
