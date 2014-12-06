@@ -223,10 +223,10 @@ public class ComponentSorter extends AbstractSorter {
         final Matcher matcher = component.getMatcher(text.toString());
         final boolean found = matcher.find();
         if (found) {
-          occurrences.add(new Occurrence(component, new Range(matcher.start())));
+          occurrences.add(new Occurrence(new Range(matcher.start())));
           if (component.isAllowedMultipleTimes()) {
             while (matcher.find()) {
-              occurrences.add(new Occurrence(component, new Range(matcher.start())));
+              occurrences.add(new Occurrence(new Range(matcher.start())));
             }
           } else if (matcher.find()) {
             duplicates.add(component);

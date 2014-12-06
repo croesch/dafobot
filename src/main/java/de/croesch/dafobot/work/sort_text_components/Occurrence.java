@@ -1,26 +1,18 @@
 package de.croesch.dafobot.work.sort_text_components;
 
-import de.croesch.dafobot.work.sort_text_components.comp.ComponentIF;
 
 /**
- * Represents a specific occurrence of a component in a text.
+ * Represents a specific occurrence of a text in a text.
  *
  * @author dafo
  * @since Date: Nov 22, 2014
  */
 public class Occurrence {
 
-  private final ComponentIF component;
-
   private final Range where;
 
-  public Occurrence(final ComponentIF comp, final Range r) {
-    this.component = comp;
+  public Occurrence(final Range r) {
     this.where = r;
-  }
-
-  public ComponentIF component() {
-    return this.component;
   }
 
   public Range where() {
