@@ -21,28 +21,37 @@ public class Text_Substring_Int_Test {
   public void should_Return_Substring_Based_On_Commentless_String() {
     Text sut = new Text("");
     assertThat(sut.substring(0).toPlainString()).isEqualTo("");
+
     sut = new Text("<!-->");
     assertThat(sut.substring(0).toPlainString()).isEqualTo("<!-->");
+
     sut = new Text("<!--->");
     assertThat(sut.substring(0).toPlainString()).isEqualTo("<!--->");
+
     sut = new Text("<!---->");
     assertThat(sut.substring(0).toPlainString()).isEqualTo("<!---->");
+
     sut = new Text("A<!---->B");
     assertThat(new Text("A<!---->B").toString()).isEqualTo("AB");
     assertThat(sut.substring(0).toPlainString()).isEqualTo("A<!---->B");
     assertThat(sut.substring(1).toPlainString()).isEqualTo("B");
     assertThat(sut.substring(2).toPlainString()).isEqualTo("");
+
     sut = new Text("<!--");
     assertThat(sut.substring(0).toPlainString()).isEqualTo("<!--");
+
     sut = new Text("-->");
     assertThat(sut.substring(0).toPlainString()).isEqualTo("-->");
     assertThat(sut.substring(1).toPlainString()).isEqualTo("->");
     assertThat(sut.substring(2).toPlainString()).isEqualTo(">");
     assertThat(sut.substring(3).toPlainString()).isEqualTo("");
+
     sut = new Text("<!--<!-- -->");
     assertThat(sut.substring(0).toPlainString()).isEqualTo("<!--<!-- -->");
+
     sut = new Text("A");
     assertThat(sut.substring(0).toPlainString()).isEqualTo("A");
+
     sut = new Text("ABC");
     assertThat(sut.substring(0).toPlainString()).isEqualTo("ABC");
     assertThat(sut.substring(1).toPlainString()).isEqualTo("BC");
