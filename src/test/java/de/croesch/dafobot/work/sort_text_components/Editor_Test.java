@@ -102,6 +102,12 @@ public class Editor_Test extends Editor_TestCase {
   }
 
   @Test
+  public void should_Replace_Old_Name_Variant_Templates_In_Male_Surename_Article() throws IOException,
+                                                                                  URISyntaxException {
+    compare(BEFORE_AFTER_DIR + "nachname-m");
+  }
+
+  @Test
   public void should_Replace_Old_Name_Variant_Templates_In_Female_Article() throws IOException, URISyntaxException {
     compare(BEFORE_AFTER_DIR + "vorname-f-old");
   }

@@ -27,7 +27,7 @@ import de.croesch.dafobot.work.sort_text_components.comp.PseudoComp_Uebersetzung
  */
 public class ComponentSorter extends AbstractSorter {
 
-  private static final ComponentIF FORENAME = new BeginningTemplate("Wortart", "|", "Vorname");
+  private static final ComponentIF NAME = new BeginningTemplate("Wortart", "|", "(Vor|Nach)name");
 
   private static final Component MALE = new Component("m");
 
@@ -141,7 +141,7 @@ public class ComponentSorter extends AbstractSorter {
 
   private Text replaceOldNameVariants(Text text, final Collection<String> additionalActions) {
     final String editString = "Wortformen -> Namensvarianten";
-    if (FORENAME.getMatcher(text.toString()).find()) {
+    if (NAME.getMatcher(text.toString()).find()) {
       final Matcher femaleOldMatcher = FEMALE_OLD_VARIANT.getMatcher(text.toString());
       if (femaleOldMatcher.find()) {
         String replacement;
