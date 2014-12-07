@@ -21,7 +21,8 @@ public class PseudoComp_Uebersetzungen extends AComponent {
 
   @Override
   public Matcher getMatcher(final String text) {
-    return Pattern.compile("={1,4}" + WHITESPACE_POSSIBLE_PATTERN + getNamePattern() + WHITESPACE_POSSIBLE_PATTERN
-                                   + "={1,4}").matcher(text);
+    return Pattern.compile("(\\{\\{" + WHITESPACE_POSSIBLE_PATTERN + "Absatz" + WHITESPACE_POSSIBLE_PATTERN + "\\}\\}"
+                                   + WHITESPACE_POSSIBLE_PATTERN + ")?={1,4}" + WHITESPACE_POSSIBLE_PATTERN
+                                   + getNamePattern() + WHITESPACE_POSSIBLE_PATTERN + "={1,4}").matcher(text);
   }
 }

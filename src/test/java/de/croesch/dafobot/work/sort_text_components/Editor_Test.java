@@ -30,6 +30,12 @@ public class Editor_Test extends Editor_TestCase {
   private static final String QA_NEEDED_DIR = "/sort_text_components/qaneeded/";
 
   @Test
+  public void should_Move_Absatz_Template_Before_Uebersetzungen_With_Uebersetzungen_Component() throws IOException,
+                                                                                               URISyntaxException {
+    compare(BEFORE_AFTER_DIR + "absatz-before-uebersetzungen");
+  }
+
+  @Test
   public void should_Order_Vorname_Article_Correctly() throws IOException, URISyntaxException {
     compare(BEFORE_AFTER_DIR + "vorname");
   }
