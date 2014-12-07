@@ -36,6 +36,11 @@ public class Editor_Test extends Editor_TestCase {
   }
 
   @Test
+  public void should_Insert_Empty_Line_When_Last_Component_Has_No_Suffix() throws IOException, URISyntaxException {
+    compare(BEFORE_AFTER_DIR + "last-component-no-suffix");
+  }
+
+  @Test
   public void should_Order_Vorname_Article_Correctly() throws IOException, URISyntaxException {
     compare(BEFORE_AFTER_DIR + "vorname");
   }

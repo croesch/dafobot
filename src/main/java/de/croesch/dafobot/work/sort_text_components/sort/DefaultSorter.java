@@ -88,7 +88,7 @@ abstract class DefaultSorter extends AbstractSorter {
       } catch (final NoEditNeededException e) {
         // ignore
       }
-      tb.append(t);
+      tb.append(new Text(t.toPlainString().trim()));
       // each result is trimmed so append 'divider' (except for last one)
       if (i + 1 < result.size()) {
         tb.append(new Text("\n\n"));

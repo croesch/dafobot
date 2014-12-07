@@ -127,12 +127,19 @@ public class ComponentSorter extends AbstractSorter {
     }
 
     tb.append(begin(textWithoutEnd, whereComponents));
-    for (final Occurrence occurrence : whereComponents) {
+    for (int i = 0; i < whereComponents.size(); ++i) {
+      final Occurrence occurrence = whereComponents.get(i);
+      Text toAppend;
       if (occurrence.where().getTo() < 0) {
-        tb.append(textWithoutEnd.substring(occurrence.where().getFrom()));
+        toAppend = textWithoutEnd.substring(occurrence.where().getFrom());
       } else {
-        tb.append(textWithoutEnd.substring(occurrence.where().getFrom(), occurrence.where().getTo()));
+        toAppend = textWithoutEnd.substring(occurrence.where().getFrom(), occurrence.where().getTo());
       }
+      tb.append(new Text(toAppend.toPlainString().trim()));
+      // each result is trimmed so append 'divider' (except for last one)
+      //      if (i + 1 < whereComponents.size()) {
+      tb.append(new Text("\n\n"));
+      //      }
     }
     if (!whereEnd.isEmpty()) {
       tb.append(text.substring(beginEnd));
