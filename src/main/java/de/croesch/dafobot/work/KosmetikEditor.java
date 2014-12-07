@@ -42,7 +42,7 @@ public class KosmetikEditor {
     // remove {{PAGENAME}}
     string = string.replaceAll("\\{\\{PAGENAME\\}\\}", "{{subst:PAGENAME}}");
 
-    if (!string.equals(subResult)) {
+    if (!string.equals(subResult.toPlainString())) {
       additionalActions.add("Kosmetik");
     }
     return new Text(string);
