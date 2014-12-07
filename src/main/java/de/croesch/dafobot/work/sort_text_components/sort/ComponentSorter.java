@@ -31,6 +31,8 @@ public class ComponentSorter extends AbstractSorter {
 
   private static final Component MALE = new Component("m");
 
+  private static final Component FEMALE = new Component("f");
+
   private static final String[] CONDITION_NAME_ARTICLE = new String[] { "Wortart", "|", "(Vor|Nach)name" };
 
   private static final Component MALE_OLD_VARIANT = new Component("Männliche", "Wortformen");
@@ -145,10 +147,10 @@ public class ComponentSorter extends AbstractSorter {
       final Matcher femaleOldMatcher = FEMALE_OLD_VARIANT.getMatcher(text.toString());
       if (femaleOldMatcher.find()) {
         String replacement;
-        if (MALE.getMatcher(text.toString()).find()) {
-          replacement = "{{Weibliche Namensvarianten}}";
-        } else {
+        if (FEMALE.getMatcher(text.toString()).find()) {
           replacement = "{{Namensvarianten}}";
+        } else {
+          replacement = "{{Weibliche Namensvarianten}}";
         }
         additionalActions.add(editString);
         text = new Text(text.substring(0, femaleOldMatcher.start()).toPlainString() + replacement

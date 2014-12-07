@@ -97,6 +97,12 @@ public class Editor_Test extends Editor_TestCase {
   }
 
   @Test
+  public void should_Replace_Old_Name_Variant_Templates_In_Article_Without_Gender() throws IOException,
+                                                                                   URISyntaxException {
+    compare(BEFORE_AFTER_DIR + "vorname-old");
+  }
+
+  @Test
   public void should_Replace_Old_Name_Variant_Templates_In_Male_Article() throws IOException, URISyntaxException {
     compare(BEFORE_AFTER_DIR + "vorname-m-old");
   }
