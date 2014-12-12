@@ -9,8 +9,7 @@
     <dependency>
       <groupId>net.sourceforge</groupId>
       <artifactId>jwbf</artifactId>
-      <!-- 3.0.0 needed for good paging. Remove SNAPSHOT ASAP! -->
-      <version>3.0.0-SNAPSHOT</version>
+      <version>3.1.0</version>
     </dependency>
     <dependency>
       <groupId>com.miglayout</groupId>
@@ -48,25 +47,6 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
-  <repositories>
-    <repository>
-      <releases>
-        <enabled>false</enabled>
-        <updatePolicy>never</updatePolicy>
-        <checksumPolicy>fail</checksumPolicy>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-        <updatePolicy>daily</updatePolicy>
-        <checksumPolicy>fail</checksumPolicy>
-      </snapshots>
-      <id>ossSnapshots</id>
-      <name>OSS Snapshots</name>
-      <url>https://oss.sonatype.org/content/groups/public/</url>
-      <layout>default</layout>
-    </repository>
-  </repositories>
 
   <build>
     <plugins>
