@@ -1,6 +1,5 @@
 package de.croesch.dafobot.jwbf.mediawiki.bots;
 
-import java.io.IOException;
 import java.util.Properties;
 
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
@@ -25,9 +24,8 @@ public class MediaWikiBot extends net.sourceforge.jwbf.mediawiki.bots.MediaWikiB
    * @since Date: Nov 19, 2014
    * @param prop the configuration for the bot
    * @param site the site where the bot should take action
-   * @throws IOException if log in fails
    */
-  public MediaWikiBot(final Properties prop, final String site) throws IOException {
+  public MediaWikiBot(final Properties prop, final String site) {
     super(site);
 
     if (!isLoggedIn()) {

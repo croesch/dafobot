@@ -1,6 +1,5 @@
 package de.croesch.dafobot.jwbf.mediawiki.bots;
 
-import java.io.IOException;
 import java.util.Properties;
 
 /**
@@ -15,9 +14,8 @@ public class WikipediaDeBot extends MediaWikiBot {
    *
    * @since Date: Nov 19, 2014
    * @param props the configuration of the bot
-   * @throws IOException if log in fails
    */
-  public WikipediaDeBot(final Properties props) throws IOException {
+  public WikipediaDeBot(final Properties props) {
     super(props, "https://de.wikipedia.org/w/");
   }
 }
