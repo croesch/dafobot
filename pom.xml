@@ -60,4 +60,10 @@
       </plugin>
     </plugins>
   </build>
+
+  <scm>
+    <connection>scm:git:git@github.com:croesch/dafobot.git</connection>
+    <url>scm:git:git@github.com:croesch/dafobot.git</url>
+    <developerConnection>scm:git:git@github.com:croesch/dafobot.git</developerConnection>
+  </scm>
 </project>
