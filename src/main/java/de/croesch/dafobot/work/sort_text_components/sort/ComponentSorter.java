@@ -33,13 +33,13 @@ public class ComponentSorter extends AbstractSorter {
 
   private static final Component FEMALE = new Component("f");
 
-  private static final String[] CONDITION_NAME_ARTICLE = new String[] { "Wortart", "|", "(Vor|Nach)name" };
+  private static final String[] CONDITION_NAME_ARTICLE = new String[] {"Wortart", "|", "(Vor|Nach)name"};
 
   private static final Component MALE_OLD_VARIANT = new Component("Männliche", "Wortformen");
 
   private static final Component FEMALE_OLD_VARIANT = new Component("Weibliche", "Wortformen");
 
-  private static ComponentIF[] COMPONENTS = { new Component("Lesungen"),
+  private static ComponentIF[] COMPONENTS = {new Component("Lesungen"),
                                              new Component("Anmerkung", "Steigerung"),
                                              new Component("Artikel", "Nachname"),
                                              new Component("Artikel", "Toponym"),
@@ -47,8 +47,8 @@ public class ComponentSorter extends AbstractSorter {
                                              new Component("Anmerkung(en)?"),
                                              new MultiComponent("Anmerkung(en)?", "|", "[^}]*"),
                                              new NotAvailableIfOtherComponentExists(CONDITION_NAME_ARTICLE,
-                                                                                    new String[] { "Alternative",
-                                                                                                  "Schreibweisen" }),
+                                                                                    new String[] {"Alternative",
+                                                                                                  "Schreibweisen"}),
                                              new Component("Veraltete", "Schreibweisen"),
                                              new Component("Nebenformen"),
                                              new Component("Worttrennung"),
@@ -63,8 +63,7 @@ public class ComponentSorter extends AbstractSorter {
                                              new Component("Bedeutungen"),
                                              new Component("Abkürzungen"),
                                              new Component("Symbole"),
-                                             new Component("QS", "Herkunft", "|", "fehlt"),
-                                             new Component("Herkunft"),
+                                             new Component("(QS", "Herkunft", "|", "fehlt|Herkunft)"),
                                              new Component("Synonyme"),
                                              new Component("Sinnverwandte", "(Wörter|Zeichen|Redewendungen)"),
                                              new Component("Gegenwörter"),
@@ -77,8 +76,8 @@ public class ComponentSorter extends AbstractSorter {
                                              new Component("Kurzformen"),
                                              new Component("Koseformen"),
                                              new AvailableIfOtherComponentExists(CONDITION_NAME_ARTICLE,
-                                                                                 new String[] { "Alternative",
-                                                                                               "Schreibweisen" }),
+                                                                                 new String[] {"Alternative",
+                                                                                               "Schreibweisen"}),
                                              new Component("Namensvarianten"),
                                              new Component("Weibliche", "Namensvarianten"),
                                              new Component("Männliche", "Namensvarianten"),
@@ -88,16 +87,16 @@ public class ComponentSorter extends AbstractSorter {
                                              new Component("Sprichwörter"),
                                              new Component("Charakteristische", "Wortkombinationen"),
                                              new Component("Wortbildungen"),
-                                             new Component("Entlehnungen") };
+                                             new Component("Entlehnungen")};
 
-  private static ComponentIF[] END_COMPONENTS = { new PseudoComp_Uebersetzungen(),
+  private static ComponentIF[] END_COMPONENTS = {new PseudoComp_Uebersetzungen(),
                                                  new Component("Dialektausdrücke"),
                                                  new Component("Lemmaverweis[^}]+"),
                                                  new Component("Referenzen"),
                                                  // mehrfach?
                                                  new Component("Navigationsleiste[^}]+"),
                                                  new Component("Quellen"),
-                                                 new Component("Ähnlichkeiten") };
+                                                 new Component("Ähnlichkeiten")};
 
   @Override
   public Text sort(final Text text, final Collection<String> additionalActions) throws PageNeedsQAException,
@@ -137,9 +136,9 @@ public class ComponentSorter extends AbstractSorter {
       }
       tb.append(new Text(toAppend.toPlainString().trim()));
       // each result is trimmed so append 'divider' (except for last one)
-      //      if (i + 1 < whereComponents.size()) {
+      // if (i + 1 < whereComponents.size()) {
       tb.append(new Text("\n\n"));
-      //      }
+      // }
     }
     if (!whereEnd.isEmpty()) {
       tb.append(text.substring(beginEnd));

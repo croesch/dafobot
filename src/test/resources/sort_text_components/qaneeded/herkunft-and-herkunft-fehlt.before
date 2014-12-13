@@ -1,0 +1,75 @@
+== Divergenz ({{Sprache|Deutsch}}) ==
+=== {{Wortart|Substantiv|Deutsch}}, {{f}} ===
+
+{{Deutsch Substantiv Übersicht
+|Nominativ Singular=die Divergenz
+|Nominativ Plural=die Divergenzen
+|Genitiv Singular=der Divergenz
+|Genitiv Plural=der Divergenzen
+|Dativ Singular=der Divergenz
+|Dativ Plural=den Divergenzen
+|Akkusativ Singular=die Divergenz
+|Akkusativ Plural=die Divergenzen
+}}
+
+{{Worttrennung}}
+:Di·ver·genz, {{Pl.}} Di·ver·gen·zen
+
+{{Aussprache}}
+:{{IPA}} {{Lautschrift|…}}
+:{{Hörbeispiele}} {{Audio|}}
+:{{Reime}} {{Reim|ɛnʦ|Deutsch}}
+
+{{Bedeutungen}}
+:[1] ''bildungssprachlich:'' Auseinanderstreben
+:[2] ''[[Mathematik]], [[Analysis]], von Folgen und Funktionen:'' das Nichtvorhandensein von Konvergenz; das Fehlen eines [[Grenzwert]]es
+:[3] ''[[Mathematik]], [[Physik]], [[Feldtheorie]], [[Vektoranalysis]]:'' ein Differentialoperator, der einem [[Vektorfeld]] ein [[Skalarfeld]] zuordnet.
+
+{{Symbole}}
+:[3] [[∇]]·
+
+{{Herkunft}}
+:vergleiche [[divergent]]{{QS Herkunft|fehlt}}
+
+{{Sinnverwandte Wörter}}
+:[1] [[Diskrepanz]]
+
+{{Gegenwörter}}
+:[2] [[Konvergenz]]
+
+{{Oberbegriffe}}
+:[3] [[Differentialoperator]]
+
+{{Beispiele}}
+:[2] Bei der durch <math>a_n=(-1)^n</math> definierten Folge liegt ''Divergenz'' vor, da sie sich keinem festen Grenzwert nähert.
+:[3] Ist die ''Divergenz'' in einem Feldes überall gleich Null, so bezeichnet man das Feld als quellenfrei.
+{{Beispiele fehlen}}
+
+==== Übersetzungen ====
+{{Ü-Tabelle|Ü-links=
+*{{en}}: [1, 2] {{Ü|en|divergency}}; [2] {{Ü|en|divergence}}
+*{{fr}}: [1, 2] {{Ü|fr|divergence}} {{f}}
+|Ü-rechts=
+*{{sv}}: [1, 2] {{Ü|sv|divergens}}
+*{{es}}: [1, 2] {{Ü|es|divergencia}} {{f}}
+}}
+
+{{Referenzen}}
+:[1, 2] {{Wikipedia|Divergenz}}
+:[3] {{Wikipedia|Divergenz (Mathematik)}}
+:[1] {{Ref-DWDS|Divergenz}}
+:[1] {{Ref-Canoo|Divergenz}}
+:[1] {{Ref-UniLeipzig|Divergenz}}
+:[1, 2] {{Ref-FreeDictionary|Divergenz}}
+:[1, 2] {{Ref-Duden|Divergenz}}
+
+{{Ähnlichkeiten}}
+:[[Differenz]]
+
+[[Kategorie:Fremdwort]]
+
+[[fr:Divergenz]]
+[[ko:Divergenz]]
+[[ru:Divergenz]]
+[[sv:Divergenz]]
+[[zh:Divergenz]]

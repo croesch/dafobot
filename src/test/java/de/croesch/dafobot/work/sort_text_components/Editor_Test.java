@@ -31,7 +31,7 @@ public class Editor_Test extends Editor_TestCase {
 
   @Test
   public void should_Move_Absatz_Template_Before_Uebersetzungen_With_Uebersetzungen_Component() throws IOException,
-  URISyntaxException {
+                                                                                               URISyntaxException {
     compare(BEFORE_AFTER_DIR + "absatz-before-uebersetzungen");
   }
 
@@ -102,19 +102,19 @@ public class Editor_Test extends Editor_TestCase {
 
   @Test
   public void should_Accept_Duplicate_Anmerkungen_And_Insert_It_In_Original_Order_1() throws IOException,
-  URISyntaxException {
+                                                                                     URISyntaxException {
     compare(BEFORE_AFTER_DIR + "duplicate-anmerkung-1");
   }
 
   @Test
   public void should_Accept_Duplicate_Anmerkungen_And_Insert_It_In_Original_Order_2() throws IOException,
-  URISyntaxException {
+                                                                                     URISyntaxException {
     compare(BEFORE_AFTER_DIR + "duplicate-anmerkung-2");
   }
 
   @Test
   public void should_Replace_Old_Name_Variant_Templates_In_Article_Without_Gender() throws IOException,
-  URISyntaxException {
+                                                                                   URISyntaxException {
     compare(BEFORE_AFTER_DIR + "vorname-old");
   }
 
@@ -125,7 +125,7 @@ public class Editor_Test extends Editor_TestCase {
 
   @Test
   public void should_Replace_Old_Name_Variant_Templates_In_Male_Surename_Article() throws IOException,
-  URISyntaxException {
+                                                                                  URISyntaxException {
     compare(BEFORE_AFTER_DIR + "nachname-m");
   }
 
@@ -151,26 +151,32 @@ public class Editor_Test extends Editor_TestCase {
 
   @Test(expected = NoEditNeededException.class)
   public void should_Throw_NoEditNeededException_If_Components_Are_Already_Ordered_Correctly() throws IOException,
-  URISyntaxException {
+                                                                                              URISyntaxException {
     edit(NO_EDIT_NEEDED_DIR + "correct-order");
   }
 
   @Test(expected = NoEditNeededException.class)
   public void should_Throw_NoEditNeededException_If_Only_Empty_Templates_Would_Be_Removed() throws IOException,
-  URISyntaxException {
+                                                                                           URISyntaxException {
     edit(NO_EDIT_NEEDED_DIR + "with-empty-templates");
   }
 
   @Test(expected = PageNeedsQAException.class)
   public void should_Throw_PageNeedsQAException_If_Component_Comes_Twice_Consecutive() throws IOException,
-  URISyntaxException {
+                                                                                      URISyntaxException {
     edit(QA_NEEDED_DIR + "duplicate-component-1");
   }
 
   @Test(expected = PageNeedsQAException.class)
   public void should_Throw_PageNeedsQAException_If_Components_Exists_Twice_At_Different_Positions() throws IOException,
-  URISyntaxException {
+                                                                                                   URISyntaxException {
     edit(QA_NEEDED_DIR + "duplicate-component-2");
+  }
+
+  @Test(expected = PageNeedsQAException.class)
+  public void should_Throw_PageNeedsQAException_If_Herkunft_And_Herkunft_fehlt_Available() throws IOException,
+                                                                                          URISyntaxException {
+    edit(QA_NEEDED_DIR + "herkunft-and-herkunft-fehlt");
   }
 
   private void compare(final String resource) throws IOException, URISyntaxException {
