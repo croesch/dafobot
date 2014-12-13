@@ -20,6 +20,9 @@ public class KosmetikEditor {
     // remove bad comments
     string = string
       .replaceAll("<!-- für weitere Sprachkürzel siehe den Link (rechts )?unterhalb des Editierfensters -->", "");
+    string = string
+      .replaceAll("<!-- Hier kannst du weitere Bausteine einsetzen, zum Beispiel für Synonyme oder ähnliche Wörter. Eine Auswahl solcher Bausteine findest du über diesem Bearbeitungsfenster! -->",
+                  "");
     // remove unnecessary empty lines
     string = string.replaceAll("\n\n\n+", "\n\n");
     // remove trailing spaces

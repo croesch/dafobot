@@ -20,4 +20,13 @@ public class Test_KosmetikEditor_Edit {
     assertThat(result.toPlainString()).isEqualTo("<ref>{{Wikipedia|Dreiständerbau}}</ref>");
     assertThat(this.additionalActions).containsOnly("Kosmetik");
   }
+
+  @Test
+  public void should_Remove_Comment_For_Adding_More_Components() {
+    final Text text = new Text("<!-- Hier kannst du weitere Bausteine einsetzen, zum Beispiel für Synonyme oder ähnliche Wörter. Eine Auswahl solcher Bausteine findest du über diesem Bearbeitungsfenster! -->");
+    final Text result = new KosmetikEditor().edit(text, this.additionalActions);
+
+    assertThat(result.toPlainString()).isEmpty();
+    assertThat(this.additionalActions).containsOnly("Kosmetik");
+  }
 }
