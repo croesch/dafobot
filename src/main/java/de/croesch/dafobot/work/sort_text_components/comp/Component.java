@@ -17,7 +17,9 @@ public class Component extends AComponent {
 
   @Override
   public Matcher getMatcher(final String text) {
-    return Pattern.compile("\\{\\{" + WHITESPACE_POSSIBLE_PATTERN + getNamePattern() + WHITESPACE_POSSIBLE_PATTERN
-                                   + "\\}\\}").matcher(text);
+    final String anchor = "(\\{\\{" + WHITESPACE_POSSIBLE_PATTERN + "Anker[^}]*\\}\\}" + WHITESPACE_POSSIBLE_PATTERN
+                          + ")?";
+    return Pattern.compile(anchor + "\\{\\{" + WHITESPACE_POSSIBLE_PATTERN + getNamePattern()
+                           + WHITESPACE_POSSIBLE_PATTERN + "\\}\\}").matcher(text);
   }
 }

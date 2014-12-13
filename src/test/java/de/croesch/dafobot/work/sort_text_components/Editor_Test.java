@@ -31,13 +31,18 @@ public class Editor_Test extends Editor_TestCase {
 
   @Test
   public void should_Move_Absatz_Template_Before_Uebersetzungen_With_Uebersetzungen_Component() throws IOException,
-                                                                                               URISyntaxException {
+  URISyntaxException {
     compare(BEFORE_AFTER_DIR + "absatz-before-uebersetzungen");
   }
 
   @Test
   public void should_Insert_Empty_Line_When_Last_Component_Has_No_Suffix() throws IOException, URISyntaxException {
     compare(BEFORE_AFTER_DIR + "last-component-no-suffix");
+  }
+
+  @Test
+  public void should_Consider_Anchor_As_Part_Of_Components() throws IOException, URISyntaxException {
+    compare(BEFORE_AFTER_DIR + "anker");
   }
 
   @Test
@@ -97,19 +102,19 @@ public class Editor_Test extends Editor_TestCase {
 
   @Test
   public void should_Accept_Duplicate_Anmerkungen_And_Insert_It_In_Original_Order_1() throws IOException,
-                                                                                     URISyntaxException {
+  URISyntaxException {
     compare(BEFORE_AFTER_DIR + "duplicate-anmerkung-1");
   }
 
   @Test
   public void should_Accept_Duplicate_Anmerkungen_And_Insert_It_In_Original_Order_2() throws IOException,
-                                                                                     URISyntaxException {
+  URISyntaxException {
     compare(BEFORE_AFTER_DIR + "duplicate-anmerkung-2");
   }
 
   @Test
   public void should_Replace_Old_Name_Variant_Templates_In_Article_Without_Gender() throws IOException,
-                                                                                   URISyntaxException {
+  URISyntaxException {
     compare(BEFORE_AFTER_DIR + "vorname-old");
   }
 
@@ -120,7 +125,7 @@ public class Editor_Test extends Editor_TestCase {
 
   @Test
   public void should_Replace_Old_Name_Variant_Templates_In_Male_Surename_Article() throws IOException,
-                                                                                  URISyntaxException {
+  URISyntaxException {
     compare(BEFORE_AFTER_DIR + "nachname-m");
   }
 
@@ -146,32 +151,32 @@ public class Editor_Test extends Editor_TestCase {
 
   @Test(expected = NoEditNeededException.class)
   public void should_Throw_NoEditNeededException_If_Components_Are_Already_Ordered_Correctly() throws IOException,
-                                                                                              URISyntaxException {
+  URISyntaxException {
     edit(NO_EDIT_NEEDED_DIR + "correct-order");
   }
 
   @Test(expected = NoEditNeededException.class)
   public void should_Throw_NoEditNeededException_If_Only_Empty_Templates_Would_Be_Removed() throws IOException,
-                                                                                           URISyntaxException {
+  URISyntaxException {
     edit(NO_EDIT_NEEDED_DIR + "with-empty-templates");
   }
 
   @Test(expected = PageNeedsQAException.class)
   public void should_Throw_PageNeedsQAException_If_Component_Comes_Twice_Consecutive() throws IOException,
-                                                                                      URISyntaxException {
+  URISyntaxException {
     edit(QA_NEEDED_DIR + "duplicate-component-1");
   }
 
   @Test(expected = PageNeedsQAException.class)
   public void should_Throw_PageNeedsQAException_If_Components_Exists_Twice_At_Different_Positions() throws IOException,
-                                                                                                   URISyntaxException {
+  URISyntaxException {
     edit(QA_NEEDED_DIR + "duplicate-component-2");
   }
 
   private void compare(final String resource) throws IOException, URISyntaxException {
     final Text result = edit(resource);
-    assertThat(result.toPlainString()).as(resource)
-                                      .isEqualTo(textOf(pathOfClasspath(resource + ".after")).toPlainString());
+    assertThat(result.toPlainString()).as(resource).isEqualTo(textOf(pathOfClasspath(resource + ".after"))
+      .toPlainString());
   }
 
   private Text edit(final String resource) throws URISyntaxException, NoEditNeededException, IOException {
