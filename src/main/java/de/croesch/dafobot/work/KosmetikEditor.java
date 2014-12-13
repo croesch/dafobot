@@ -18,8 +18,8 @@ public class KosmetikEditor {
     String string = subResult.toPlainString();
 
     // remove bad comments
-    string = string.replaceAll("<!-- für weitere Sprachkürzel siehe den Link (rechts )?unterhalb des Editierfensters -->",
-                               "");
+    string = string
+      .replaceAll("<!-- für weitere Sprachkürzel siehe den Link (rechts )?unterhalb des Editierfensters -->", "");
     // remove unnecessary empty lines
     string = string.replaceAll("\n\n\n+", "\n\n");
     // remove trailing spaces
@@ -37,6 +37,9 @@ public class KosmetikEditor {
     string = string.replaceAll("(\n:\\[\\d,)(\\d\\])", "$1 $2");
     // remove spaces between " and <ref>
     string = string.replaceAll("(\\{\\{Beispiele\\}\\}.*?“) +(<ref>)", "$1$2");
+    // trim inside <ref>..</ref>
+    string = string.replaceAll("<ref>[ \t]+", "<ref>");
+    string = string.replaceAll("[ \t]+</ref>", "</ref>");
     // remove empty template
     string = string.replaceAll("\\{\\{Ähnlichkeiten\\}\\}\n\n", "");
     // remove {{PAGENAME}}
