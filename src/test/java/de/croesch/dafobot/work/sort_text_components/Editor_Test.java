@@ -30,6 +30,26 @@ public class Editor_Test extends Editor_TestCase {
   private static final String QA_NEEDED_DIR = "/sort_text_components/qaneeded/";
 
   @Test
+  public void should_Order_Grundformverweis_Correctly() throws IOException, URISyntaxException {
+    compare(BEFORE_AFTER_DIR + "grundformverw1");
+  }
+
+  @Test
+  public void should_Order_Grundformverweis_Dekl_Correctly() throws IOException, URISyntaxException {
+    compare(BEFORE_AFTER_DIR + "grundformverw2");
+  }
+
+  @Test
+  public void should_Order_Grundformverweis_Konj_Correctly() throws IOException, URISyntaxException {
+    compare(BEFORE_AFTER_DIR + "grundformverw3");
+  }
+
+  @Test
+  public void should_Order_Grundformverweis_Partizipform_Correctly() throws IOException, URISyntaxException {
+    compare(BEFORE_AFTER_DIR + "grundformverw4");
+  }
+
+  @Test
   public void should_Move_Absatz_Template_Before_Uebersetzungen_With_Uebersetzungen_Component() throws IOException,
                                                                                                URISyntaxException {
     compare(BEFORE_AFTER_DIR + "absatz-before-uebersetzungen");
