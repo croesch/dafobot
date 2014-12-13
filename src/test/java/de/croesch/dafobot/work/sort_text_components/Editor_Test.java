@@ -31,22 +31,7 @@ public class Editor_Test extends Editor_TestCase {
 
   @Test
   public void should_Order_Grundformverweis_Correctly() throws IOException, URISyntaxException {
-    compare(BEFORE_AFTER_DIR + "grundformverw1");
-  }
-
-  @Test
-  public void should_Order_Grundformverweis_Dekl_Correctly() throws IOException, URISyntaxException {
-    compare(BEFORE_AFTER_DIR + "grundformverw2");
-  }
-
-  @Test
-  public void should_Order_Grundformverweis_Konj_Correctly() throws IOException, URISyntaxException {
-    compare(BEFORE_AFTER_DIR + "grundformverw3");
-  }
-
-  @Test
-  public void should_Order_Grundformverweis_Partizipform_Correctly() throws IOException, URISyntaxException {
-    compare(BEFORE_AFTER_DIR + "grundformverw4");
+    compare(BEFORE_AFTER_DIR + "grundformverw");
   }
 
   @Test
