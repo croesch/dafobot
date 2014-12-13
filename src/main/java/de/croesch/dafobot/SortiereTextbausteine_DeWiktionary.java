@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import de.croesch.dafobot.core.BotController;
 import de.croesch.dafobot.jwbf.mediawiki.bots.WiktionaryDeBot;
+import de.croesch.dafobot.work.AutomaticVerifier;
 import de.croesch.dafobot.work.VisualManualVerifier;
 import de.croesch.dafobot.work.api.ChangeVerifierIF;
 import de.croesch.dafobot.work.api.EditorIF;
@@ -43,7 +44,7 @@ public class SortiereTextbausteine_DeWiktionary {
       final PagePoolIF pages = new PagePool(bot, connection);
       final PageEditabilityCheckerIF editabilityChecker = new PageEditabilityChecker();
       final EditorIF editor = new Editor();
-      final ChangeVerifierIF verifier = new VisualManualVerifier();
+      final ChangeVerifierIF verifier = getChangeVerifier(args);
 
       final BotController controller = new BotController(bot, connection, pages, editabilityChecker, editor, verifier);
       controller.run();
@@ -52,5 +53,22 @@ public class SortiereTextbausteine_DeWiktionary {
     }
 
     LOG.info("finished.");
+  }
+
+  private static ChangeVerifierIF getChangeVerifier(final String[] args) {
+    if (args != null) {
+      for (int i = 0; i < args.length; ++i) {
+        final String arg = args[i];
+        if (arg.equals("--max") && args.length > i + 1) {
+          try {
+            final int maximum = Integer.valueOf(args[i + 1]);
+            return new AutomaticVerifier(maximum);
+          } catch (final Exception e) {
+            // maximum cannot be determined..
+          }
+        }
+      }
+    }
+    return new VisualManualVerifier();
   }
 }
