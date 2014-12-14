@@ -42,12 +42,12 @@ public class PartSorter extends DefaultSorter {
 
   @Override
   protected List<Text> sort(final List<Text> texts) throws PageNeedsQAException {
-    final Map<String, Text> parts = parseLanguages(texts);
+    final Map<String, List<Text>> parts = parseLanguages(texts);
 
     return order(parts);
   }
 
-  private List<Text> order(final Map<String, Text> parts) {
+  private List<Text> order(final Map<String, List<Text>> parts) {
     final List<Text> ordered = new ArrayList<>();
 
     final List<String> languages = new ArrayList<>(parts.keySet());
@@ -56,30 +56,30 @@ public class PartSorter extends DefaultSorter {
     Collections.sort(languages);
 
     for (final String language : languages) {
-      ordered.add(parts.get(language));
+      ordered.addAll(parts.get(language));
     }
 
     return ordered;
   }
 
   private void addLanguageIfExists(final List<Text> ordered,
-                                   final Map<String, Text> parts,
+                                   final Map<String, List<Text>> parts,
                                    final List<String> languages,
                                    final String language) {
     if (languages.contains(language)) {
-      ordered.add(parts.get(language));
+      ordered.addAll(parts.get(language));
       languages.remove(language);
     }
   }
 
-  private Map<String, Text> parseLanguages(final List<Text> texts) throws PageNeedsQAException {
-    final Map<String, Text> parts = new HashMap<>();
+  private Map<String, List<Text>> parseLanguages(final List<Text> texts) throws PageNeedsQAException {
+    final Map<String, List<Text>> parts = new HashMap<>();
     for (final Text text : texts) {
       final String language = parseLanguage(text);
-      if (parts.containsKey(language)) {
-        throw new PageNeedsQAException("Duplicate language part for lang=" + language);
+      if (!parts.containsKey(language)) {
+        parts.put(language, new ArrayList<Text>());
       }
-      parts.put(language, text);
+      parts.get(language).add(text);
     }
     return parts;
   }

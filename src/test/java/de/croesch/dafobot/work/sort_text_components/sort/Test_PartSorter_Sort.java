@@ -89,4 +89,16 @@ public class Test_PartSorter_Sort {
     assertThat(result.toPlainString()).isEqualTo(header1 + NN + CONTENT1 + NN + header3 + NN + CONTENT3 + NN + header2
                                                  + NN + CONTENT2);
   }
+
+  @Test
+  public void should_Allow_Duplicated_Language_Entries() throws NoEditNeededException, PageNeedsQAException {
+    final Text text = new Text(LATEIN + NN + CONTENT1 + NN + DEUTSCH + NN + CONTENT2 + NN + LATEIN + NN + CONTENT3 + NN
+                               + INTERNATIONAL + NN + CONTENT4 + NN + DEUTSCH + NN + CONTENT5 + NN + INTERNATIONAL + NN
+                               + CONTENT6 + NN);
+    final Text result = this.sut.sort(text, this.additionalActions);
+
+    assertThat(result.toPlainString()).isEqualTo(DEUTSCH + NN + CONTENT2 + NN + DEUTSCH + NN + CONTENT5 + NN
+                                                 + INTERNATIONAL + NN + CONTENT4 + NN + INTERNATIONAL + NN + CONTENT6
+                                                 + NN + LATEIN + NN + CONTENT1 + NN + LATEIN + NN + CONTENT3);
+  }
 }
