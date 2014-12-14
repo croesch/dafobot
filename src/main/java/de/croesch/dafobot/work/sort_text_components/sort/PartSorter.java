@@ -18,7 +18,7 @@ import de.croesch.dafobot.work.api.PageNeedsQAException;
  * @since Date: Dec 6, 2014
  */
 public class PartSorter extends DefaultSorter {
-  private static final Pattern LANGUAGE_PATTERN = Pattern.compile("^\\s*==[^={]*\\{\\{[^}]+\\|(\\S+)\\}\\}");
+  private static final Pattern LANGUAGE_PATTERN = Pattern.compile("^\\s*==[^={]*\\{\\{[^}]+\\|([^}]+)\\}\\}");
 
   private static final Pattern END_PATTERN = Pattern.compile("(\n+\\[\\[[^\n\\]]+\\]\\]\\s*)+$");
 
@@ -88,7 +88,7 @@ public class PartSorter extends DefaultSorter {
     final Matcher matcher = LANGUAGE_PATTERN.matcher(text.toString());
 
     if (matcher.find()) {
-      return matcher.group(1).toLowerCase();
+      return matcher.group(1).trim().toLowerCase();
     }
 
     throw new PageNeedsQAException("Cannot determine language for part.");
