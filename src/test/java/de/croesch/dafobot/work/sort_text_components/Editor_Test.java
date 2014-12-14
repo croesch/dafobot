@@ -161,6 +161,12 @@ public class Editor_Test extends Editor_TestCase {
   }
 
   @Test(expected = NoEditNeededException.class)
+  public void should_Throw_NoEditNeededException_If_No_Components_But_Duplicated_Language_Part() throws IOException,
+                                                                                                URISyntaxException {
+    edit(NO_EDIT_NEEDED_DIR + "duplicate-part-no-components");
+  }
+
+  @Test(expected = NoEditNeededException.class)
   public void should_Throw_NoEditNeededException_If_Only_Empty_Templates_Would_Be_Removed() throws IOException,
                                                                                            URISyntaxException {
     edit(NO_EDIT_NEEDED_DIR + "with-empty-templates");
