@@ -27,7 +27,11 @@ import de.croesch.dafobot.work.sort_text_components.comp.PseudoComp_Uebersetzung
  */
 public class ComponentSorter extends AbstractSorter {
 
+  private static final Component MEANING = new Component("Bedeutungen");
+
   private static final ComponentIF NAME = new BeginningTemplate("Wortart", "|", "(Vor|Nach)name");
+
+  private static final ComponentIF DEKL_KONJ_Form = new BeginningTemplate("Wortart", "|", "(Deklin|Konjug)ierte Form");
 
   private static final Component MALE = new Component("m");
 
@@ -64,7 +68,7 @@ public class ComponentSorter extends AbstractSorter {
                                                                 "(Dekl|Konj|Partizipform))?(",
                                                                 "|",
                                                                 "[^}]*)?"),
-                                             new Component("Bedeutungen"),
+                                             MEANING,
                                              new Component("Abkürzungen"),
                                              new Component("Symbole"),
                                              new Component("(QS", "Herkunft", "|", "fehlt|Herkunft)"),
@@ -111,6 +115,7 @@ public class ComponentSorter extends AbstractSorter {
 
     Text textWithoutEnd = whereEnd.isEmpty() ? text : text.substring(0, beginEnd);
     textWithoutEnd = replaceOldNameVariants(textWithoutEnd, additionalActions);
+    textWithoutEnd = replaceMeaningByCorrectTemplate(textWithoutEnd, additionalActions);
     final ArrayList<ComponentIF> duplicateComponents = new ArrayList<ComponentIF>();
     final List<Occurrence> whereComponents = findComponents(textWithoutEnd, COMPONENTS, duplicateComponents);
 
@@ -178,6 +183,18 @@ public class ComponentSorter extends AbstractSorter {
         text = new Text(text.substring(0, maleOldMatcher.start()).toPlainString() + replacement
                         + text.substring(maleOldMatcher.end()).toPlainString());
       }
+    }
+    return text;
+  }
+
+  private Text replaceMeaningByCorrectTemplate(Text text, final Collection<String> additionalActions) {
+    final String editString = "Bedeutung -> Grammatische Merkmale";
+    final Matcher meaningMatcher = MEANING.getMatcher(text.toString());
+    if (DEKL_KONJ_Form.getMatcher(text.toString()).find() && meaningMatcher.find()) {
+      final String replacement = "{{Grammatische Merkmale}}";
+      additionalActions.add(editString);
+      text = new Text(text.substring(0, meaningMatcher.start()).toPlainString() + replacement
+                      + text.substring(meaningMatcher.end()).toPlainString());
     }
     return text;
   }

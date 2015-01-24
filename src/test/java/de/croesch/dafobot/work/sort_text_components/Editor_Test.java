@@ -118,6 +118,16 @@ public class Editor_Test extends Editor_TestCase {
   }
 
   @Test
+  public void should_Replace_Bedeutungen_By_Grammatische_Merkmale_When_Dekl() throws IOException, URISyntaxException {
+    compare(BEFORE_AFTER_DIR + "bedeutung-statt-gr-merkmale-dekl");
+  }
+
+  @Test
+  public void should_Replace_Bedeutungen_By_Grammatische_Merkmale_When_Konj() throws IOException, URISyntaxException {
+    compare(BEFORE_AFTER_DIR + "bedeutung-statt-gr-merkmale-konj");
+  }
+
+  @Test
   public void should_Replace_Old_Name_Variant_Templates_In_Article_Without_Gender() throws IOException,
                                                                                    URISyntaxException {
     compare(BEFORE_AFTER_DIR + "vorname-old");
@@ -188,6 +198,18 @@ public class Editor_Test extends Editor_TestCase {
   public void should_Throw_PageNeedsQAException_If_Herkunft_And_Herkunft_fehlt_Available() throws IOException,
                                                                                           URISyntaxException {
     edit(QA_NEEDED_DIR + "herkunft-and-herkunft-fehlt");
+  }
+
+  @Test(expected = PageNeedsQAException.class)
+  public void should_Throw_PageNeedsQAException_If_Konj_Contains_Bedeutungen_And_Gr_Merkmale() throws IOException,
+                                                                                              URISyntaxException {
+    edit(QA_NEEDED_DIR + "konj-bedeutungen-and-gr-merkmale");
+  }
+
+  @Test(expected = PageNeedsQAException.class)
+  public void should_Throw_PageNeedsQAException_If_Dekl_Contains_Bedeutungen_And_Gr_Merkmale() throws IOException,
+                                                                                              URISyntaxException {
+    edit(QA_NEEDED_DIR + "dekl-bedeutungen-and-gr-merkmale");
   }
 
   private void compare(final String resource) throws IOException, URISyntaxException {
