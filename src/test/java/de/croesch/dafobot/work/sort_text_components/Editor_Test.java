@@ -118,6 +118,11 @@ public class Editor_Test extends Editor_TestCase {
   }
 
   @Test
+  public void should_Replace_Lemmaverweis_By_Grundformverweis_Konj() throws IOException, URISyntaxException {
+    compare(BEFORE_AFTER_DIR + "konj-lemmaverweis");
+  }
+
+  @Test
   public void should_Replace_Bedeutungen_By_Grammatische_Merkmale_When_Dekl() throws IOException, URISyntaxException {
     compare(BEFORE_AFTER_DIR + "bedeutung-statt-gr-merkmale-dekl");
   }

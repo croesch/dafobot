@@ -28,21 +28,23 @@ import de.croesch.dafobot.work.sort_text_components.comp.PseudoComp_Uebersetzung
  */
 public class ComponentSorter extends AbstractSorter {
 
-  private static final Component MEANING = new Component("Bedeutungen");
+  private static final ComponentIF LEMMA_START = new BeginningTemplate("Lemmaverweis");
+
+  private static final ComponentIF MEANING = new Component("Bedeutungen");
 
   private static final ComponentIF NAME = new BeginningTemplate("Wortart", "|", "(Vor|Nach)name");
 
   private static final ComponentIF DEKL_KONJ_Form = new BeginningTemplate("Wortart", "|", "(Deklin|Konjug)ierte Form");
 
-  private static final Component MALE = new Component("m");
+  private static final ComponentIF MALE = new Component("m");
 
-  private static final Component FEMALE = new Component("f");
+  private static final ComponentIF FEMALE = new Component("f");
 
   private static final String[] CONDITION_NAME_ARTICLE = new String[] {"Wortart", "|", "(Vor|Nach)name"};
 
-  private static final Component MALE_OLD_VARIANT = new Component("Männliche", "Wortformen");
+  private static final ComponentIF MALE_OLD_VARIANT = new Component("Männliche", "Wortformen");
 
-  private static final Component FEMALE_OLD_VARIANT = new Component("Weibliche", "Wortformen");
+  private static final ComponentIF FEMALE_OLD_VARIANT = new Component("Weibliche", "Wortformen");
 
   private static ComponentIF[] COMPONENTS = {new Component("Lesungen"),
                                              new Component("Anmerkung", "Steigerung"),
@@ -108,8 +110,10 @@ public class ComponentSorter extends AbstractSorter {
                                                  new Component("Ähnlichkeiten")};
 
   @Override
-  public Text sort(final Text text, final Collection<String> additionalActions) throws PageNeedsQAException,
-                                                                               NoEditNeededException {
+  public Text sort(Text text, final Collection<String> additionalActions) throws PageNeedsQAException,
+                                                                         NoEditNeededException {
+    text = replaceLemmaverweisByCorrectTemplate(text, additionalActions);
+
     final TextBuilder tb = new TextBuilder();
     final List<Occurrence> whereEnd = findComponents(text, END_COMPONENTS, new ArrayList<ComponentIF>());
     final int beginEnd = min(whereEnd);
@@ -196,6 +200,18 @@ public class ComponentSorter extends AbstractSorter {
       additionalActions.add(editString);
       text = new Text(text.substring(0, meaningMatcher.start()).toPlainString() + replacement
                       + text.substring(meaningMatcher.end()).toPlainString());
+    }
+    return text;
+  }
+
+  private Text replaceLemmaverweisByCorrectTemplate(Text text, final Collection<String> additionalActions) {
+    final String editString = "Lemmaverweis -> Grundformverweis";
+    final Matcher lemmaMatcher = LEMMA_START.getMatcher(text.toString());
+    if (DEKL_KONJ_Form.getMatcher(text.toString()).find() && lemmaMatcher.find()) {
+      final String replacement = "{{Grundformverweis";
+      additionalActions.add(editString);
+      text = new Text(text.substring(0, lemmaMatcher.start()).toPlainString() + replacement
+                      + text.substring(lemmaMatcher.end()).toPlainString());
     }
     return text;
   }
