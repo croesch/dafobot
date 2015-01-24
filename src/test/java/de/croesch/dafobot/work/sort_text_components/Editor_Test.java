@@ -212,6 +212,13 @@ public class Editor_Test extends Editor_TestCase {
     edit(QA_NEEDED_DIR + "dekl-bedeutungen-and-gr-merkmale");
   }
 
+  @Test(expected = PageNeedsQAException.class)
+  public void should_Throw_PageNeedsQAException_If_Veraltete_Schreibweisen_Is_Not_At_Begin_Of_Line()
+                                                                                                    throws IOException,
+                                                                                                    URISyntaxException {
+    edit(QA_NEEDED_DIR + "veraltete-schreibweisen-not-at-begin");
+  }
+
   private void compare(final String resource) throws IOException, URISyntaxException {
     final Text result = edit(resource);
     assertThat(result.toPlainString()).as(resource).isEqualTo(textOf(pathOfClasspath(resource + ".after"))

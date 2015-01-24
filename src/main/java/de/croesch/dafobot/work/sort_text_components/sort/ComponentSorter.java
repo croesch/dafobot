@@ -17,6 +17,7 @@ import de.croesch.dafobot.work.sort_text_components.comp.Component;
 import de.croesch.dafobot.work.sort_text_components.comp.ComponentIF;
 import de.croesch.dafobot.work.sort_text_components.comp.MultiComponent;
 import de.croesch.dafobot.work.sort_text_components.comp.NotAvailableIfOtherComponentExists;
+import de.croesch.dafobot.work.sort_text_components.comp.OnlyAtLineBeginComponent;
 import de.croesch.dafobot.work.sort_text_components.comp.PseudoComp_Uebersetzungen;
 
 /**
@@ -53,7 +54,7 @@ public class ComponentSorter extends AbstractSorter {
                                              new NotAvailableIfOtherComponentExists(CONDITION_NAME_ARTICLE,
                                                                                     new String[] {"Alternative",
                                                                                                   "Schreibweisen"}),
-                                             new Component("Veraltete", "Schreibweisen"),
+                                             new OnlyAtLineBeginComponent("Veraltete", "Schreibweisen"),
                                              new Component("Nebenformen"),
                                              new Component("Worttrennung"),
                                              new Component("in", "arabischer", "Schrift"),
@@ -215,7 +216,7 @@ public class ComponentSorter extends AbstractSorter {
 
   private List<Occurrence> findComponents(final Text text,
                                           final ComponentIF[] components,
-                                          final List<ComponentIF> duplicates) {
+                                          final List<ComponentIF> duplicates) throws PageNeedsQAException {
     final List<Occurrence> occurrences = new ArrayList<>();
 
     for (final ComponentIF component : components) {
@@ -223,10 +224,10 @@ public class ComponentSorter extends AbstractSorter {
         final Matcher matcher = component.getMatcher(text.toString());
         final boolean found = matcher.find();
         if (found) {
-          occurrences.add(new Occurrence(new Range(matcher.start())));
+          addOccurrence(occurrences, matcher.start(), text.toString(), component);
           if (component.isAllowedMultipleTimes()) {
             while (matcher.find()) {
-              occurrences.add(new Occurrence(new Range(matcher.start())));
+              addOccurrence(occurrences, matcher.start(), text.toString(), component);
             }
           } else if (matcher.find()) {
             duplicates.add(component);
@@ -237,6 +238,16 @@ public class ComponentSorter extends AbstractSorter {
 
     fillRange(occurrences);
     return occurrences;
+  }
+
+  private void addOccurrence(final List<Occurrence> occurrences,
+                             final int begin,
+                             final String text,
+                             final ComponentIF component) throws PageNeedsQAException {
+    if (component instanceof OnlyAtLineBeginComponent && begin > 0 && !(text.charAt(begin - 1) == '\n')) {
+      throw new PageNeedsQAException("Component '" + component + "' is required to be at begin of line but isn't");
+    }
+    occurrences.add(new Occurrence(new Range(begin)));
   }
 
   private Text begin(final Text text, final List<Occurrence> where) {
