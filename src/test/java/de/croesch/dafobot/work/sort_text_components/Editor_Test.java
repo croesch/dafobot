@@ -35,6 +35,11 @@ public class Editor_Test extends Editor_TestCase {
   }
 
   @Test
+  public void should_Order_Quellen_Template_With_Pipe_Correctly() throws IOException, URISyntaxException {
+    compare(BEFORE_AFTER_DIR + "quellen-sorting-with-pipe");
+  }
+
+  @Test
   public void should_Move_Absatz_Template_Before_Uebersetzungen_With_Uebersetzungen_Component() throws IOException,
                                                                                                URISyntaxException {
     compare(BEFORE_AFTER_DIR + "absatz-before-uebersetzungen");

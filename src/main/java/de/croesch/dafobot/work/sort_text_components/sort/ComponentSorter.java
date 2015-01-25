@@ -106,7 +106,7 @@ public class ComponentSorter extends AbstractSorter {
                                                  new Component("Referenzen"),
                                                  // mehrfach?
                                                  new Component("Navigationsleiste[^}]+"),
-                                                 new Component("Quellen"),
+                                                 new Component("Quellen[^}]*"),
                                                  new Component("Ähnlichkeiten")};
 
   @Override
