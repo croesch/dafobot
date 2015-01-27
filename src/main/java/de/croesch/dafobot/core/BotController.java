@@ -2,7 +2,11 @@ package de.croesch.dafobot.core;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
@@ -40,18 +44,31 @@ public class BotController {
 
   private final Connection connection;
 
+  private final String maintenanceArticleName;
+
   public BotController(final MediaWikiBot bot,
                        final Connection connection,
                        final PagePoolIF pages,
                        final PageEditabilityCheckerIF editabilityChecker,
                        final EditorIF editor,
                        final ChangeVerifierIF verifier) {
+    this(bot, connection, pages, editabilityChecker, editor, verifier, "");
+  }
+
+  public BotController(final MediaWikiBot bot,
+                       final Connection connection,
+                       final PagePoolIF pages,
+                       final PageEditabilityCheckerIF editabilityChecker,
+                       final EditorIF editor,
+                       final ChangeVerifierIF verifier,
+                       final String maintenance) {
     this.bot = bot;
     this.connection = connection;
     this.pages = pages;
     this.editabilityChecker = editabilityChecker;
     this.editor = editor;
     this.verifier = verifier;
+    this.maintenanceArticleName = maintenance;
   }
 
   public void run() {
@@ -114,6 +131,59 @@ public class BotController {
       e.printStackTrace();
       LOG.error(e.getMessage());
     }
+
+    if (countCorruptStatements() > 10) {
+      writeCorruptStatementsToSpecialArticle();
+    }
+  }
+
+  private void writeCorruptStatementsToSpecialArticle() {
+    if (this.maintenanceArticleName == null || this.maintenanceArticleName.isEmpty()) {
+      return;
+    }
+    final String statementString = "SELECT page, reason, at FROM `no_edit_pages` WHERE corrupt=true";
+    final List<String[]> articles = new ArrayList<String[]>();
+    try (Statement statement = this.connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
+                                                               ResultSet.CONCUR_UPDATABLE);) {
+      final ResultSet result = statement.executeQuery(statementString);
+      while (result.next()) {
+        final String[] article = new String[3];
+        article[0] = result.getString(1);
+        article[1] = result.getString(2);
+        article[2] = result.getTimestamp(3).toString();
+        articles.add(article);
+        result.deleteRow();
+      }
+    } catch (final SQLException e) {
+      e.printStackTrace();
+      LOG.error(e.getMessage());
+    }
+    final SimpleArticle maintenanceArticle = this.bot.readData(this.maintenanceArticleName);
+    String newRows = "";
+    for (final String[] article : articles) {
+      newRows += "|-\n";
+      newRows += "| [[" + article[0] + "]] || <nowiki>" + article[1] + "</nowiki> || " + article[2] + "\n";
+    }
+    final String marker = "<!-- dafobot -->";
+    maintenanceArticle.setText(maintenanceArticle.getText().replaceFirst(marker + "\n?", newRows + marker + "\n"));
+    maintenanceArticle.setEditSummary("Update");
+    this.bot.writeContent(maintenanceArticle);
+  }
+
+  private int countCorruptStatements() {
+    final String statementString = "SELECT COUNT(*) FROM `no_edit_pages` WHERE corrupt=true";
+
+    try (final PreparedStatement statement = this.connection.prepareStatement(statementString);) {
+      final ResultSet resultSet = statement.executeQuery();
+      if (!resultSet.next()) {
+        throw new IllegalStateException();
+      }
+      return resultSet.getInt(1);
+    } catch (final SQLException e) {
+      e.printStackTrace();
+      LOG.error(e.getMessage());
+    }
+    return 0;
   }
 
   private void insertArticle(final String title, final boolean edit) {

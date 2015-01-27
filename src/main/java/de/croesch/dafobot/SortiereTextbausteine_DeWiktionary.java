@@ -45,8 +45,15 @@ public class SortiereTextbausteine_DeWiktionary {
       final PageEditabilityCheckerIF editabilityChecker = new PageEditabilityChecker();
       final EditorIF editor = new Editor();
       final ChangeVerifierIF verifier = getChangeVerifier(args);
+      final String maintenanceArticle = "Benutzer:DafoBot/Sortierung_der_Textbausteine/Wartungsliste";
 
-      final BotController controller = new BotController(bot, connection, pages, editabilityChecker, editor, verifier);
+      final BotController controller = new BotController(bot,
+                                                         connection,
+                                                         pages,
+                                                         editabilityChecker,
+                                                         editor,
+                                                         verifier,
+                                                         maintenanceArticle);
       controller.run();
     } catch (final SQLException e) {
       LOG.error(e.getMessage());
