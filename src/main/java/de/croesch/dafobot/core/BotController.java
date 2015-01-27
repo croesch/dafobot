@@ -143,16 +143,14 @@ public class BotController {
     }
     final String statementString = "SELECT page, reason, at FROM `no_edit_pages` WHERE corrupt=true";
     final List<String[]> articles = new ArrayList<String[]>();
-    try (Statement statement = this.connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
-                                                               ResultSet.CONCUR_UPDATABLE);) {
-      final ResultSet result = statement.executeQuery(statementString);
+    try (final PreparedStatement statement = this.connection.prepareStatement(statementString);) {
+      final ResultSet result = statement.executeQuery();
       while (result.next()) {
         final String[] article = new String[3];
         article[0] = result.getString(1);
         article[1] = result.getString(2);
         article[2] = result.getTimestamp(3).toString();
         articles.add(article);
-        result.deleteRow();
       }
     } catch (final SQLException e) {
       e.printStackTrace();
@@ -168,6 +166,13 @@ public class BotController {
     maintenanceArticle.setText(maintenanceArticle.getText().replaceFirst(marker + "\n?", newRows + marker + "\n"));
     maintenanceArticle.setEditSummary("Update");
     this.bot.writeContent(maintenanceArticle);
+
+    try (final Statement statement = this.connection.createStatement();) {
+      statement.execute("DELETE FROM `no_edit_pages` WHERE corrupt=true");
+    } catch (final SQLException e) {
+      e.printStackTrace();
+      LOG.error(e.getMessage());
+    }
   }
 
   private int countCorruptStatements() {
